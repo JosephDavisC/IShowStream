@@ -1,0 +1,25 @@
+# Credentials
+*.env
+config/secrets.json
+*.pem
+*.key
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+vendor/
+
+# Build outputs
+dist/
+build/
+*.exe
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
