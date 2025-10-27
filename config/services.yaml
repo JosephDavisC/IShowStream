@@ -1,0 +1,20 @@
+services:
+  chat-ingestion:
+    name: chat-ingestion
+    runtime: go
+    port: 8080
+
+  orchestrator:
+    name: orchestrator-agent
+    runtime: python
+    port: 8081
+
+  dashboard-api:
+    name: dashboard-api
+    runtime: go
+    port: 8082
+
+  frontend:
+    name: frontend
+    runtime: node
+    port: 3000
