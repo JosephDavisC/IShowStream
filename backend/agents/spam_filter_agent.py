@@ -1,7 +1,13 @@
 import os
+import sys
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
+
+# Fix Windows console encoding for emojis
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 
 # Load environment variables
 load_dotenv('../../config/.env')

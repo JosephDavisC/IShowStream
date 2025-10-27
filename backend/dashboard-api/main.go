@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -32,6 +34,24 @@ type Stats struct {
 	MessagesPerMin float64 `json:"messages_per_min"`
 }
 
+type StreamerInfo struct {
+	Channel     string `json:"channel"`
+	DisplayName string `json:"display_name"`
+	AvatarURL   string `json:"avatar_url"`
+	Platform    string `json:"platform"`
+}
+
+type TwitchUser struct {
+	ID              string `json:"id"`
+	Login           string `json:"login"`
+	DisplayName     string `json:"display_name"`
+	ProfileImageURL string `json:"profile_image_url"`
+}
+
+type TwitchUsersResponse struct {
+	Data []TwitchUser `json:"data"`
+}
+
 var firestoreClient *firestore.Client
 
 func main() {
@@ -56,6 +76,8 @@ func main() {
 	mux.HandleFunc("/api/messages/recent", getRecentMessages)
 	mux.HandleFunc("/api/messages/priority", getPriorityMessages)
 	mux.HandleFunc("/api/stats", getStats)
+	mux.HandleFunc("/api/insights/latest", getLatestInsights)
+	mux.HandleFunc("/api/streamer", getStreamerInfo)
 	mux.HandleFunc("/health", healthCheck)
 
 	// Enable CORS
@@ -203,6 +225,110 @@ func getStats(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(stats)
+}
+
+func getLatestInsights(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	// Get the most recent insight
+	query := firestoreClient.Collection("insights").
+		OrderBy("timestamp", firestore.Desc).
+		Limit(1)
+
+	docs := query.Documents(ctx)
+	defer docs.Stop()
+
+	doc, err := docs.Next()
+	if err == iterator.Done {
+		// No insights yet
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"actionable_insights": []string{},
+			"message": "No insights generated yet. Run the insight processor.",
+		})
+		return
+	}
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	data := doc.Data()
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+	json.NewEncoder(w).Encode(data)
+}
+
+func getStreamerInfo(w http.ResponseWriter, r *http.Request) {
+	// Get channel from environment variable
+	channel := os.Getenv("TWITCH_CHANNEL")
+	if channel == "" {
+		channel = "unknown"
+	}
+
+	// Get Twitch API credentials
+	clientID := os.Getenv("TWITCH_CLIENT_ID")
+	clientSecret := os.Getenv("TWITCH_CLIENT_SECRET")
+
+	// Default streamer info
+	streamerInfo := StreamerInfo{
+		Channel:     channel,
+		DisplayName: channel,
+		AvatarURL:   "https://static-cdn.jtvnw.net/user-default-pictures-uv/cdd517fe-def4-11e9-948e-784f43822e80-profile_image-70x70.png",
+		Platform:    "Twitch",
+	}
+
+	// Fetch real profile picture from Twitch API
+	if clientID != "" && clientSecret != "" {
+		// Get OAuth token
+		tokenURL := "https://id.twitch.tv/oauth2/token"
+		tokenReq, _ := http.NewRequest("POST", tokenURL, nil)
+		q := tokenReq.URL.Query()
+		q.Add("client_id", clientID)
+		q.Add("client_secret", clientSecret)
+		q.Add("grant_type", "client_credentials")
+		tokenReq.URL.RawQuery = q.Encode()
+
+		client := &http.Client{}
+		tokenResp, err := client.Do(tokenReq)
+		if err == nil {
+			defer tokenResp.Body.Close()
+			tokenBody, _ := io.ReadAll(tokenResp.Body)
+
+			var tokenData struct {
+				AccessToken string `json:"access_token"`
+			}
+			json.Unmarshal(tokenBody, &tokenData)
+
+			if tokenData.AccessToken != "" {
+				// Get user info from Twitch API
+				userURL := fmt.Sprintf("https://api.twitch.tv/helix/users?login=%s", channel)
+				userReq, _ := http.NewRequest("GET", userURL, nil)
+				userReq.Header.Set("Client-ID", clientID)
+				userReq.Header.Set("Authorization", "Bearer "+tokenData.AccessToken)
+
+				userResp, err := client.Do(userReq)
+				if err == nil {
+					defer userResp.Body.Close()
+					userBody, _ := io.ReadAll(userResp.Body)
+
+					var userData TwitchUsersResponse
+					json.Unmarshal(userBody, &userData)
+
+					if len(userData.Data) > 0 {
+						streamerInfo.DisplayName = userData.Data[0].DisplayName
+						streamerInfo.AvatarURL = userData.Data[0].ProfileImageURL
+					}
+				}
+			}
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+	json.NewEncoder(w).Encode(streamerInfo)
 }
 
 func healthCheck(w http.ResponseWriter, r *http.Request) {

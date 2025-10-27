@@ -39,33 +39,37 @@ def process_new_messages():
             for doc in messages:
                 msg = doc.to_dict()
                 doc_id = doc.id
-                
+
                 # Skip if already processed
                 if doc_id == last_processed:
                     continue
-                
+
                 # Skip if already has spam analysis
                 if 'spam_analysis' in msg:
                     continue
-                
+
                 username = msg.get('username', 'Unknown')
                 message = msg.get('message', '')
-                
+
                 print(f"📨 Processing: [{username}] {message}")
-                
+
                 # Analyze with agent
                 result = agent.analyze_message(username, message)
-                
+
                 print(f"   {'🚫 SPAM' if result['is_spam'] else '✅ CLEAN'} (Confidence: {result['confidence']}%)")
-                
+
                 # Update Firestore with analysis
                 doc.reference.update({
                     'spam_analysis': result,
                     'processed_at': firestore.SERVER_TIMESTAMP
                 })
-                
+
                 last_processed = doc_id
-            
+
+                # Rate limiting: Wait 6 seconds between API calls to respect free tier (10/min)
+                print("   ⏳ Waiting 6s to respect API rate limits...")
+                time.sleep(6)
+
             # Wait before checking again
             time.sleep(5)
             

@@ -94,7 +94,12 @@ class AgentOrchestrator:
                     
                     self.processed_docs.add(doc.id)
                     print()
-                
+
+                    # Rate limiting: wait 12 seconds between messages
+                    # (2 API calls per message * 6 seconds = 12 seconds total)
+                    print("⏰ Waiting 12s to respect API rate limits...\n")
+                    time.sleep(12)
+
                 # Wait before next check
                 time.sleep(3)
                 
