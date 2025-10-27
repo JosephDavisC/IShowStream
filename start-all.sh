@@ -15,8 +15,10 @@ echo ""
 # Create logs directory if it doesn't exist
 mkdir -p logs
 mkdir -p .pids
+
 # Clean up stale pidfiles from previous runs
-rm -f .pids/*.pid || true
+rm -f .pids/*.pid 2>/dev/null || true
+rm -f .all-pids 2>/dev/null || true
 
 # Check if .env file exists
 if [ ! -f config/.env ]; then
@@ -120,7 +122,8 @@ echo ""
 echo "🛑 To stop all services:"
 echo "  ./stop-all.sh"
 echo ""
-echo "💾 PIDs saved to .all-pids"
+
+# Save all PIDs for reference
 echo "$CHAT_PID $API_PID $AGENTS_PID $FRONTEND_PID" > .all-pids
 
 # Try to open browser automatically
@@ -137,3 +140,4 @@ fi
 echo ""
 echo "🎉 StreamSense is now running!"
 echo "   Press Ctrl+C or run './stop-all.sh' to stop all services"
+echo ""

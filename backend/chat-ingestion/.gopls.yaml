@@ -1,0 +1,5 @@
+# gopls configuration
+# This tells the Go language server to ignore the tools directory
+
+directoryFilters:
+  - "-tools"
