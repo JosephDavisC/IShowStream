@@ -23,6 +23,9 @@ type ChatMessage struct {
 	UserID    string    `firestore:"user_id"`
 	IsMod     bool      `firestore:"is_mod"`
 	IsSub     bool      `firestore:"is_sub"`
+	// writer metadata helps identify the origin of writes
+	WriterHost string `firestore:"writer_host,omitempty"`
+	WriterPID  int    `firestore:"writer_pid,omitempty"`
 }
 
 var (
@@ -136,6 +139,12 @@ func handleMessage(message twitch.PrivateMessage) {
 		IsSub:     message.User.Badges["subscriber"] == 1,
 	}
 
+	// add writer origin metadata to each message
+	if hn, err := os.Hostname(); err == nil {
+		chatMsg.WriterHost = hn
+	}
+	chatMsg.WriterPID = os.Getpid()
+
 	// Print to console (for debugging)
 	fmt.Printf("[%s] %s: %s\n",
 		chatMsg.Channel,
@@ -152,6 +161,12 @@ func saveToFirestore(msg ChatMessage) {
 
 	// Create collection reference
 	collection := firestoreClient.Collection("messages")
+
+	// Emergency kill-switch: if DISABLE_FIRESTORE_WRITES is set, skip writes
+	if v := os.Getenv("DISABLE_FIRESTORE_WRITES"); v == "1" || v == "true" || v == "TRUE" {
+		log.Printf("⚠️  Firestore writes disabled by DISABLE_FIRESTORE_WRITES (skipping message)")
+		return
+	}
 
 	// Add document
 	_, _, err := collection.Add(ctx, msg)

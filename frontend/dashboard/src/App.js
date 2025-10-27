@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { Maximize2, Minimize2 } from 'lucide-react';
 import PriorityMessages from './components/PriorityMessages';
 import Stats from './components/Stats';
 import RecentMessages from './components/RecentMessages';
@@ -12,6 +13,7 @@ function App() {
   const [insights, setInsights] = useState(null);
   const [streamerInfo, setStreamerInfo] = useState(null);
   const [isLive, setIsLive] = useState(false);
+  const [isHorizontalLayout, setIsHorizontalLayout] = useState(true);
 
   const API_URL = 'http://localhost:8082';
 
@@ -58,10 +60,10 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <div className={`App ${isHorizontalLayout ? 'layout-horizontal' : 'layout-vertical'}`}>
       <header className="app-header">
         <div className="header-left">
-          <h1>🎮 StreamSense Dashboard</h1>
+          <h1>🎮 StreamSense</h1>
         </div>
         <div className="header-center">
           {streamerInfo && (
@@ -84,9 +86,17 @@ function App() {
           )}
         </div>
         <div className="header-right">
+          <button
+            className="layout-toggle-btn"
+            onClick={() => setIsHorizontalLayout(!isHorizontalLayout)}
+            title={isHorizontalLayout ? "Switch to Vertical Layout" : "Switch to Horizontal Layout"}
+          >
+            {isHorizontalLayout ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+            <span>{isHorizontalLayout ? 'Vertical' : 'Horizontal'}</span>
+          </button>
           <div className="status">
             <div className={`status-indicator ${isLive ? 'live' : 'offline'}`}></div>
-            <span>{isLive ? '🔴 LIVE' : '⚫ OFFLINE'}</span>
+            <span>{isLive ? 'LIVE' : 'OFFLINE'}</span>
           </div>
         </div>
       </header>
@@ -97,23 +107,35 @@ function App() {
           <Stats stats={stats} />
         </section>
 
-        {/* AI Insights Section */}
-        <section className="section-insights">
-          <AIInsights insights={insights} />
-        </section>
+        {/* Main Content Layout */}
+        <div className={`main-layout ${isHorizontalLayout ? 'horizontal' : 'vertical'}`}>
+          {/* Left/Top Section - AI Insights and Priority */}
+          <div className="insights-section-wrapper">
+            {/* AI Insights Section */}
+            <section className="section-insights">
+              <AIInsights insights={insights} />
+            </section>
 
-        {/* Two Column Layout */}
-        <div className="two-column">
-          {/* Priority Messages */}
-          <section className="section-priority">
+            {/* Priority Messages - Only in horizontal mode */}
+            {isHorizontalLayout && (
+              <section className="section-priority">
+                <PriorityMessages messages={priorityMessages} />
+              </section>
+            )}
+          </div>
+
+          {/* Right/Bottom Section - Chat */}
+          <div className="chat-section-wrapper">
+            <RecentMessages messages={recentMessages} />
+          </div>
+        </div>
+
+        {/* Priority Messages - Only in vertical mode */}
+        {!isHorizontalLayout && (
+          <section className="section-priority-vertical">
             <PriorityMessages messages={priorityMessages} />
           </section>
-
-          {/* Recent Messages */}
-          <section className="section-recent">
-            <RecentMessages messages={recentMessages} />
-          </section>
-        </div>
+        )}
       </main>
     </div>
   );

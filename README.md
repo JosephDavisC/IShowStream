@@ -12,10 +12,28 @@
 3. Run services individually or with docker-compose
 
 ## Development
+
+### ⚡ Fastest Way - One Command
+```bash
+./start-all.sh    # Starts everything (backend + frontend)
+./stop-all.sh     # Stops everything
+```
+
+Then open: **http://localhost:3000**
+
+### 📚 Documentation
+- [QUICKSTART.md](QUICKSTART.md) - Quick reference cheat sheet
+- [RUNNING.md](RUNNING.md) - Detailed step-by-step guide and troubleshooting
+
+### 🛠️ Alternative Scripts
+- Start backend only: `./start-backend.sh`
+- Start frontend only: `cd frontend/dashboard && npm start`
+
+### 🔧 Manual Commands
 - Chat Ingestion: `cd backend/chat-ingestion && go run main.go`
-- Agents: `cd backend/agents && python orchestrator.py`
 - Dashboard API: `cd backend/dashboard-api && go run main.go`
-- Frontend: `cd frontend && npm start`
+- Agents: `cd backend/agents && source venv/bin/activate && python orchestrator.py`
+- Frontend: `cd frontend/dashboard && npm start`
 
 ## Cloud Run Deployment
 ```bash

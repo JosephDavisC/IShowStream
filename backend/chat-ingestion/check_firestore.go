@@ -34,8 +34,9 @@ func main() {
 	fmt.Println("✅ Connected to Firestore")
 	fmt.Println("📊 Checking messages collection...\n")
 
-	// Count documents in messages collection
-	iter := client.Collection("messages").Limit(10).Documents(ctx)
+	// Count documents in messages collection (and show metadata)
+	limit := 20
+	iter := client.Collection("messages").OrderBy("timestamp", firestore.Desc).Limit(limit).Documents(ctx)
 	count := 0
 
 	for {
@@ -51,16 +52,22 @@ func main() {
 		count++
 		data := doc.Data()
 
-		// Print first few messages as samples
-		if count <= 5 {
-			fmt.Printf("Message %d:\n", count)
-			fmt.Printf("  ID: %s\n", doc.Ref.ID)
-			fmt.Printf("  Username: %v\n", data["username"])
-			fmt.Printf("  Message: %v\n", data["message"])
-			fmt.Printf("  Channel: %v\n", data["channel"])
-			fmt.Printf("  Timestamp: %v\n", data["timestamp"])
-			fmt.Println()
+		// Print message sample with writer/processing metadata when available
+		fmt.Printf("Message %d:\n", count)
+		fmt.Printf("  ID: %s\n", doc.Ref.ID)
+		fmt.Printf("  Timestamp: %v\n", data["timestamp"])
+		fmt.Printf("  Username: %v\n", data["username"])
+		fmt.Printf("  Message: %v\n", data["message"])
+		if w, ok := data["writer_host"]; ok {
+			fmt.Printf("  Writer Host: %v\n", w)
 		}
+		if p, ok := data["writer_pid"]; ok {
+			fmt.Printf("  Writer PID: %v\n", p)
+		}
+		if pm, ok := data["processing_metadata"]; ok {
+			fmt.Printf("  Processing metadata: %v\n", pm)
+		}
+		fmt.Println()
 	}
 
 	if count == 0 {
