@@ -1,66 +1,120 @@
-# StreamSense - AI-Powered Twitch Chat Analytics
+# StreamSense 🎮
 
-**Google Cloud Run Hackathon 2025 - AI Agents Category**
+**AI-Powered Multi-Agent Twitch Chat Analytics Platform**
 
-StreamSense is a real-time Twitch chat analysis platform powered by Google's **Agent Development Kit (ADK)** and **Gemini AI**, deployed on **Cloud Run**.
+Built for the Google Cloud Run Hackathon 2025 - AI Agents Category
+
+StreamSense helps streamers understand their chat in real-time using a 4-agent AI system powered by Google's Agent Development Kit (ADK) and Gemini AI.
 
 ## 🤖 Multi-Agent System Architecture
 
-StreamSense uses **two specialized AI agents** that work together to analyze Twitch chat in real-time:
+StreamSense uses **4 specialized AI agents** that work together to analyze Twitch chat in real-time:
 
 ### Agent Pipeline:
 ```
-📨 Twitch Chat → 🔍 SpamFilterAgent → 🎯 PriorityAgent → 📊 Dashboard
+📨 Message → 🔍 SpamFilter → 🎯 Priority → 💬 Engagement → 📊 Dashboard
+             (every message)  (every message) (every message)
+
+📊 Batch    → 📈 TrendAgent → Trends/Memes → 📊 Dashboard
+             (every 5 minutes, 50 messages)
 ```
 
-### Agent 1: **SpamFilterAgent** (v2.0-ADK)
+### Agent 1: **SpamFilterAgent**
 - **Role**: Spam Detection & Content Filtering
-- **Model**: Gemini 2.0 Flash
-- **Capabilities**:
-  - Spam detection
-  - Link scanning
-  - Bot detection
-  - Phishing identification
+- **Model**: Gemini 2.0 Flash (with fallback heuristics)
+- **Capabilities**: Spam detection, bot detection, pattern matching
 - **Output**: Spam classification with confidence scores
 
-### Agent 2: **PriorityAgent** (v2.0-ADK)
+### Agent 2: **PriorityAgent**
 - **Role**: Message Prioritization & Ranking
-- **Model**: Gemini 2.0 Flash
-- **Capabilities**:
-  - Importance ranking (1-10)
-  - Category classification
-  - Actionability detection
-- **Depends on**: SpamFilterAgent (only processes non-spam messages)
-- **Output**: Priority scores to help streamers focus on important messages
+- **Model**: Gemini 2.0 Flash (with fallback heuristics)
+- **Capabilities**: Importance ranking (1-10), category classification
+- **Depends on**: SpamFilterAgent (only processes non-spam)
+- **Output**: Priority scores for important messages
+
+### Agent 3: **EngagementAgent**
+- **Role**: Engagement Potential Prediction
+- **Model**: Gemini 2.0 Flash (with fallback heuristics)
+- **Capabilities**: Predicts conversation potential (1-10), streamer response recommendations
+- **Output**: Engagement scores, should_respond flags
+
+### Agent 4: **TrendAgent**
+- **Role**: Trend & Pattern Detection
+- **Model**: Gemini 2.0 Flash (with fallback heuristics)
+- **Capabilities**: Trending topics, meme tracking, spam wave detection, chat mood analysis
+- **Runs**: Every 5 minutes on last 50 messages (batch analysis)
+- **Output**: Top words, emotes, trending topics, overall mood
 
 ### Multi-Agent Orchestration:
-The **AgentOrchestrator** coordinates both agents in a sequential workflow:
-1. Receives raw Twitch messages from Firestore
-2. **Agent 1** filters spam → if spam, stop pipeline
-3. **Agent 2** ranks importance → if clean, assign priority
-4. Results aggregated and displayed on dashboard
+The **AgentOrchestrator** coordinates all agents using Google ADK patterns:
+1. **Per-Message Pipeline**: Spam → Priority → Engagement
+2. **Batch Analysis**: TrendAgent analyzes patterns across messages
+3. **WebSocket Updates**: Real-time agent activity broadcast to dashboard
 
 **This demonstrates Google ADK patterns:**
-- ✅ Agent specialization
+- ✅ Agent specialization (4 distinct roles)
 - ✅ Sequential processing pipeline
+- ✅ Batch processing patterns
 - ✅ Conditional agent invocation
 - ✅ State management across agents
-- ✅ Agent-to-agent communication
+- ✅ Fallback strategies for reliability
 
 ---
 
-## 🏗️ System Architecture
+## 🏗️ System Architecture (ASCII)
 
-### Backend Services:
-- **Chat Ingestion** (Go + Cloud Run) - Connects to Twitch IRC, streams messages to Firestore
-- **Dashboard API** (Go + Cloud Run) - REST API for frontend
-- **AI Agents** (Python + ADK + Cloud Run) - Multi-agent message analysis with Gemini
-
-### Frontend:
-- **React Dashboard** (Cloud Run) - Real-time chat visualization with AI insights
-
-### Storage:
-- **Firestore** - Real-time database for messages and agent analysis
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        TWITCH IRC                               │
+│                  (Live Chat Messages)                           │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────────┐
+│              Chat Ingestion Service (Go)                        │
+│  • Connects to Twitch IRC                                       │
+│  • Saves messages to Firestore                                  │
+│  • Port: 8080                                                   │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    FIRESTORE DATABASE                           │
+│  Collections: messages, insights, trends, agent_activity        │
+└──────────┬──────────────────────────────────────┬───────────────┘
+           │                                      │
+           ▼                                      ▼
+┌──────────────────────────────┐    ┌───────────────────────────┐
+│  Multi-Agent Orchestrator    │    │  Insight Processor        │
+│  (Python + Google ADK)       │    │  (Python + Gemini AI)     │
+│                              │    │                           │
+│  Agent 1: SpamFilter    ──┐  │    │  Analyzes last 60s       │
+│  Agent 2: Priority      ──┤  │    │  Generates insights      │
+│  Agent 3: Engagement    ──┤  │    │  Runs every 1 minute     │
+│  Agent 4: TrendAgent    ──┘  │    │                           │
+│  (runs every 5 min)          │    └───────────────────────────┘
+│                              │
+│  Saves results to Firestore  │
+└──────────────────────────────┘
+           │
+           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│              Dashboard API (Go + WebSocket)                     │
+│  • REST endpoints for data                                      │
+│  • WebSocket for real-time agent activity                       │
+│  • Port: 8082                                                   │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────────┐
+│              React Dashboard (Frontend)                         │
+│  • Real-time stats and metrics                                  │
+│  • AI-generated insights (1-min updates)                        │
+│  • Agent activity log (WebSocket)                               │
+│  • Priority message feed                                        │
+│  • Port: 3000                                                   │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -87,23 +141,31 @@ streamsense/
 ├── backend/
 │   ├── chat-ingestion/     # Go - Twitch IRC ingestion service
 │   │   ├── main.go
-│   │   └── tools/          # Utility scripts (Firestore check, token gen)
-│   ├── dashboard-api/      # Go - REST API for dashboard
+│   │   └── tools/          # Utility scripts
+│   ├── dashboard-api/      # Go - REST API + WebSocket
 │   │   └── main.go
 │   └── agents/             # Python - ADK Multi-Agent System
 │       ├── orchestrator.py        # Agent coordinator
 │       ├── spam_filter_agent.py   # Agent 1: Spam detection
 │       ├── priority_agent.py      # Agent 2: Priority ranking
+│       ├── engagement_agent.py    # Agent 3: Engagement prediction
+│       ├── trend_agent.py         # Agent 4: Trend detection
+│       ├── insight_agent.py       # Insight generation
+│       ├── insight_processor.py   # Insight scheduler (1-min)
 │       └── requirements.txt
 ├── frontend/
 │   └── dashboard/          # React - Real-time dashboard UI
 │       ├── src/
+│       │   ├── App.js
+│       │   └── components/
+│       │       ├── Stats.js
+│       │       ├── AIInsights.js
+│       │       ├── PriorityMessages.js
+│       │       ├── RecentMessages.js
+│       │       └── AgentActivityLog.js
 │       └── package.json
 ├── config/
-│   └── .env.example        # Environment variables template
-├── scripts/
-│   ├── clear-messages.sh   # Clear Firestore messages
-│   └── init-firestore.sh   # Initialize Firestore
+│   └── .env                # Environment variables
 ├── logs/                   # Service logs
 ├── start-all.sh            # ⭐ Start all services (recommended)
 └── stop-all.sh             # ⭐ Stop all services
