@@ -70,7 +70,13 @@ function App() {
     <div className={`App ${isHorizontalLayout ? 'layout-horizontal' : 'layout-vertical'}`}>
       <header className="app-header">
         <div className="header-left">
-          <h1>🎮 StreamSense</h1>
+          <h1>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" style={{verticalAlign: 'middle', marginRight: '10px'}}>
+              <path d="M4.265 3.3L5.6 2l17.7 17.7-1.3 1.3L17.5 16.5c-.6.5-1.3.9-2.1 1.1-.5.1-1.1.2-1.6.2-1.2 0-2.4-.4-3.3-1.1l-2.1 2.1c-.6.6-1.4.9-2.2.9-.8 0-1.6-.3-2.2-.9L2 17l2-2c-.7-.9-1.1-2.1-1.1-3.3 0-.5.1-1.1.2-1.6.2-.8.6-1.5 1.1-2.1L4.3 8 6 6.3l-1.7-3z" fill="#9147ff"/>
+              <path d="M21 2H8l-2 2h13v11h2V4c0-1.1-.9-2-2-2zm-6 4h-2v4h2V6zm4 0h-2v4h2V6z" fill="#9147ff"/>
+            </svg>
+            StreamSense
+          </h1>
         </div>
         <div className="header-center">
           {streamerInfo && (
