@@ -1,0 +1,248 @@
+.agent-activity-log {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(138, 43, 226, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.activity-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.activity-header svg {
+  color: #8a2be2;
+}
+
+.activity-count {
+  background: rgba(138, 43, 226, 0.2);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: #d8b4fe;
+  font-weight: 500;
+}
+
+.activity-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+}
+
+.activity-empty p {
+  margin: 10px 0;
+  font-size: 1rem;
+}
+
+.activity-hint {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* Custom scrollbar */
+.activity-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.activity-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.activity-list::-webkit-scrollbar-thumb {
+  background: rgba(138, 43, 226, 0.4);
+  border-radius: 3px;
+}
+
+.activity-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(138, 43, 226, 0.6);
+}
+
+.activity-item {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 14px;
+  border-left: 3px solid rgba(138, 43, 226, 0.5);
+  transition: all 0.2s ease;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.activity-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-left-color: #8a2be2;
+  transform: translateX(3px);
+}
+
+/* Status color coding */
+.status-complete {
+  border-left-color: #22c55e;
+}
+
+.status-processing {
+  border-left-color: #3b82f6;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.status-blocked {
+  border-left-color: #ef4444;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    border-left-color: #3b82f6;
+  }
+  50% {
+    border-left-color: #60a5fa;
+  }
+}
+
+/* Activity type specific styling */
+.activity-type-spam_detected {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.activity-type-pipeline_complete {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.activity-timestamp {
+  font-size: 0.75rem;
+  color: #888;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 8px;
+}
+
+.activity-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.activity-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.activity-icon {
+  display: flex;
+  align-items: center;
+  color: #8a2be2;
+}
+
+.activity-agent-emoji {
+  font-size: 1.1rem;
+}
+
+.activity-title-text {
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.activity-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-left: 32px;
+  font-size: 0.85rem;
+}
+
+.activity-detail {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.detail-label {
+  color: #999;
+  font-weight: 500;
+  min-width: 80px;
+}
+
+.detail-value {
+  color: #ddd;
+  flex: 1;
+}
+
+.message-text {
+  font-style: italic;
+  color: #b8b8b8;
+}
+
+.spam-type {
+  color: #fca5a5;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.detail-value code {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #8a2be2;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .agent-activity-log {
+    padding: 15px;
+  }
+
+  .activity-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .activity-list {
+    max-height: 400px;
+  }
+
+  .activity-details {
+    margin-left: 24px;
+  }
+
+  .detail-label {
+    min-width: 70px;
+  }
+}

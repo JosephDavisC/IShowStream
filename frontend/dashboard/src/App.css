@@ -786,3 +786,13 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(145, 71, 255, 0.4);
 }
+
+/* Agent Activity Section */
+.section-agent-activity {
+  margin-top: 10px;
+}
+
+.section-agent-activity .agent-activity-log {
+  max-width: 1400px;
+  margin: 0 auto;
+}

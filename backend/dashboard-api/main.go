@@ -52,6 +52,16 @@ type TwitchUsersResponse struct {
 	Data []TwitchUser `json:"data"`
 }
 
+type AgentActivity struct {
+	ID           string                 `json:"id"`
+	Timestamp    time.Time              `json:"timestamp"`
+	ActivityType string                 `json:"activity_type"`
+	Agent        string                 `json:"agent"`
+	Status       string                 `json:"status"`
+	Message      map[string]interface{} `json:"message"`
+	Result       map[string]interface{} `json:"result,omitempty"`
+}
+
 var firestoreClient *firestore.Client
 
 func main() {
@@ -78,6 +88,7 @@ func main() {
 	mux.HandleFunc("/api/stats", getStats)
 	mux.HandleFunc("/api/insights/latest", getLatestInsights)
 	mux.HandleFunc("/api/streamer", getStreamerInfo)
+	mux.HandleFunc("/api/agent-activity", getAgentActivity)
 	mux.HandleFunc("/health", healthCheck)
 
 	// Enable CORS
@@ -329,6 +340,66 @@ func getStreamerInfo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 	json.NewEncoder(w).Encode(streamerInfo)
+}
+
+func getAgentActivity(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	// Get recent agent activity (last 50 activities)
+	query := firestoreClient.Collection("agent_activity").
+		OrderBy("timestamp", firestore.Desc).
+		Limit(50)
+
+	docs := query.Documents(ctx)
+	defer docs.Stop()
+
+	var activities []AgentActivity
+
+	for {
+		doc, err := docs.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			continue
+		}
+
+		data := doc.Data()
+		activity := AgentActivity{
+			ID:           doc.Ref.ID,
+			ActivityType: getString(data, "activity_type"),
+			Agent:        getString(data, "agent"),
+			Status:       getString(data, "status"),
+		}
+
+		// Parse timestamp
+		if ts, ok := data["timestamp"].(time.Time); ok {
+			activity.Timestamp = ts
+		}
+
+		// Parse message
+		if msg, ok := data["message"].(map[string]interface{}); ok {
+			activity.Message = msg
+		}
+
+		// Parse result if present
+		if result, ok := data["result"].(map[string]interface{}); ok {
+			activity.Result = result
+		}
+
+		activities = append(activities, activity)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+	json.NewEncoder(w).Encode(activities)
+}
+
+func getString(data map[string]interface{}, key string) string {
+	if val, ok := data[key].(string); ok {
+		return val
+	}
+	return ""
 }
 
 func healthCheck(w http.ResponseWriter, r *http.Request) {

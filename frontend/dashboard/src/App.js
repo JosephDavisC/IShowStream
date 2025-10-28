@@ -5,6 +5,7 @@ import PriorityMessages from './components/PriorityMessages';
 import Stats from './components/Stats';
 import RecentMessages from './components/RecentMessages';
 import AIInsights from './components/AIInsights';
+import AgentActivityLog from './components/AgentActivityLog';
 
 function App() {
   const [stats, setStats] = useState({});
@@ -12,6 +13,7 @@ function App() {
   const [recentMessages, setRecentMessages] = useState([]);
   const [insights, setInsights] = useState(null);
   const [streamerInfo, setStreamerInfo] = useState(null);
+  const [agentActivities, setAgentActivities] = useState([]);
   const [isLive, setIsLive] = useState(false);
   const [isHorizontalLayout, setIsHorizontalLayout] = useState(true);
 
@@ -44,6 +46,11 @@ function App() {
       const streamerRes = await fetch(`${API_URL}/api/streamer`);
       const streamerData = await streamerRes.json();
       setStreamerInfo(streamerData);
+
+      // Fetch agent activity
+      const activityRes = await fetch(`${API_URL}/api/agent-activity`);
+      const activityData = await activityRes.json();
+      setAgentActivities(activityData || []);
 
       setIsLive(true);
     } catch (error) {
@@ -136,6 +143,11 @@ function App() {
             <PriorityMessages messages={priorityMessages} />
           </section>
         )}
+
+        {/* Agent Activity Log Section */}
+        <section className="section-agent-activity">
+          <AgentActivityLog activities={agentActivities} />
+        </section>
       </main>
     </div>
   );
