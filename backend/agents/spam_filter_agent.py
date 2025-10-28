@@ -90,7 +90,7 @@ class SpamFilterAgent:
             temperature=0.1,  # Low temperature for consistent, reliable results
         )
 
-    def analyze_message(self, username, message):
+    def analyze_message(self, username, message, use_ai=True):
         """
         ADK Agent Method: Analyze a single message for spam
 
@@ -100,10 +100,15 @@ class SpamFilterAgent:
         Args:
             username (str): Username of the message sender
             message (str): The chat message content
+            use_ai (bool): If False, skip AI and use fallback detection
 
         Returns:
             dict: Analysis result with spam detection info
         """
+
+        # If AI quota exhausted or message not worth AI call, use fallback immediately
+        if not use_ai:
+            raise Exception("Using fallback mode (AI quota/smart filter)")
 
         prompt = f"""**Agent Task:** Analyze this Twitch chat message
 

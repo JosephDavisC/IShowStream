@@ -108,7 +108,7 @@ class PriorityAgent:
             temperature=0.2,  # Slightly higher for nuanced prioritization
         )
 
-    def rank_message(self, username, message, is_sub=False, is_mod=False):
+    def rank_message(self, username, message, is_sub=False, is_mod=False, use_ai=True):
         """
         ADK Agent Method: Rank message priority
 
@@ -120,10 +120,15 @@ class PriorityAgent:
             message (str): The chat message content
             is_sub (bool): Whether user is a subscriber
             is_mod (bool): Whether user is a moderator
+            use_ai (bool): If False, skip AI and use fallback detection
 
         Returns:
             dict: Priority analysis with ranking and categorization
         """
+
+        # If AI quota exhausted or message not worth AI call, use fallback immediately
+        if not use_ai:
+            raise Exception("Using fallback mode (AI quota/smart filter)")
 
         prompt = f"""**Agent Task:** Prioritize this Twitch chat message
 

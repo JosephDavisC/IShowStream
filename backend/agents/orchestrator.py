@@ -84,6 +84,15 @@ class AgentOrchestrator:
         self.high_priority_count = 0
         self.last_trend_analysis = time.time()  # Track when we last ran trend analysis
 
+        # Rate Limiting for AI API calls
+        self.ai_calls_today = 0
+        self.ai_quota_daily = int(os.getenv('AI_DAILY_QUOTA', '30'))  # Default: 30 AI calls per day
+        self.fallback_mode_count = 0
+
+        print(f"⚙️  AI Rate Limiting: {self.ai_quota_daily} AI calls per day")
+        print(f"💡 Smart filtering enabled: Only high-value messages use AI")
+        print()
+
         # Agent Activity Logging
         self.activity_collection = self.db.collection('agent_activity')
 
@@ -105,6 +114,8 @@ class AgentOrchestrator:
         print(f"Total messages processed: {self.total_processed}")
         print(f"Spam detected: {self.spam_detected} ({self._percent(self.spam_detected, self.total_processed)}%)")
         print(f"High priority messages: {self.high_priority_count} ({self._percent(self.high_priority_count, self.total_processed)}%)")
+        print(f"AI calls used: {self.ai_calls_today}/{self.ai_quota_daily}")
+        print(f"Fallback mode: {self.fallback_mode_count} messages ({self._percent(self.fallback_mode_count, self.total_processed)}%)")
         print("=" * 70)
 
     def _percent(self, part, whole):
@@ -204,6 +215,46 @@ class AgentOrchestrator:
                 result_data={'error': str(e)},
                 status="error"
             )
+
+    def _should_use_ai(self, message_text, username, is_sub, is_mod):
+        """
+        Smart filter: Determine if message is worth an AI call
+
+        AI is used for:
+        - Moderators (always important)
+        - Subscribers asking questions
+        - Messages with questions (?)
+        - Long messages (>50 chars)
+        - First 3 messages of the session (to show variety)
+
+        Everything else uses fallback keyword detection
+        """
+        # Always process mods with AI
+        if is_mod:
+            return True, "Moderator message"
+
+        # Check AI quota
+        if self.ai_calls_today >= self.ai_quota_daily:
+            return False, f"AI quota exhausted ({self.ai_calls_today}/{self.ai_quota_daily})"
+
+        # Allow first 3 messages to use AI (for demo purposes)
+        if self.total_processed < 3:
+            return True, "Initial demo messages"
+
+        # Subscribers with questions
+        if is_sub and '?' in message_text:
+            return True, "Subscriber question"
+
+        # Any question from anyone
+        if '?' in message_text:
+            return True, "Question detected"
+
+        # Long messages (likely thoughtful)
+        if len(message_text) > 50:
+            return True, "Long message (>50 chars)"
+
+        # Everything else: use fallback
+        return False, "Low-value message (using fallback)"
 
     def log_activity(self, activity_type, agent_name, message_data, result_data=None, status="processing"):
         """
@@ -432,6 +483,18 @@ class AgentOrchestrator:
 
                     print(f"📨 New message: [{username}] {message_text[:50]}...")
 
+                    # ═══════════════════════════════════════════════════
+                    # SMART FILTERING: Decide if message is worth AI call
+                    # ═══════════════════════════════════════════════════
+                    use_ai, filter_reason = self._should_use_ai(message_text, username, is_sub, is_mod)
+
+                    if use_ai:
+                        print(f"   🤖 AI Mode: {filter_reason}")
+                        self.ai_calls_today += 1
+                    else:
+                        print(f"   ⚡ Fallback Mode: {filter_reason}")
+                        self.fallback_mode_count += 1
+
                     # Log: Message received
                     self.log_activity(
                         activity_type="message_received",
@@ -453,7 +516,8 @@ class AgentOrchestrator:
                         status="processing"
                     )
 
-                    spam_result = self.spam_agent.analyze_message(username, message_text)
+                    # Pass use_ai flag to agent (agents will use fallback if use_ai=False)
+                    spam_result = self.spam_agent.analyze_message(username, message_text, use_ai=use_ai)
 
                     # ADK Metadata: Track which process/host ran this
                     metadata = {
@@ -538,7 +602,7 @@ class AgentOrchestrator:
                     )
 
                     priority_result = self.priority_agent.rank_message(
-                        username, message_text, is_sub, is_mod
+                        username, message_text, is_sub, is_mod, use_ai=use_ai
                     )
 
                     priority_bar = "█" * priority_result['priority'] + "░" * (10 - priority_result['priority'])
@@ -630,20 +694,8 @@ class AgentOrchestrator:
                     self.total_processed += 1
                     print()
 
-                    # Rate limiting: wait 18 seconds between messages
-                    # (3 AI agents * 6 seconds = 18 seconds to stay under 10 req/min)
-                    print("⏰ Rate limit: Waiting 18s...")
-                    for _ in range(18):
-                        if not self.running:
-                            break
-                        time.sleep(1)
-                    print()
-
-                # Wait before next check
-                for _ in range(3):
-                    if not self.running:
-                        break
-                    time.sleep(1)
+                # Wait before next check (short delay for Firestore polling)
+                time.sleep(2)
 
             except Exception as e:
                 print(f"❌ Orchestrator Error: {e}")
