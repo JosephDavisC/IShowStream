@@ -101,8 +101,12 @@ streamsense/
 │       └── package.json
 ├── config/
 │   └── .env.example        # Environment variables template
-├── start-all.sh            # One-command startup
-└── stop-all.sh             # One-command shutdown
+├── scripts/
+│   ├── clear-messages.sh   # Clear Firestore messages
+│   └── init-firestore.sh   # Initialize Firestore
+├── logs/                   # Service logs
+├── start-all.sh            # ⭐ Start all services (recommended)
+└── stop-all.sh             # ⭐ Stop all services
 ```
 
 ---
@@ -148,11 +152,17 @@ npm install
 
 ## 🎮 Usage
 
-### Automatic (Recommended):
+### Quick Start (Recommended):
 ```bash
-./start-all.sh    # Starts everything
-./stop-all.sh     # Stops everything
+# Start ALL services (backend + frontend)
+./start-all.sh
+
+# When done, stop everything
+./stop-all.sh
 ```
+
+> **Note**: `start-all.sh` starts everything and opens your browser automatically!
+> `stop-all.sh` is a nuclear kill switch that stops ALL services and kills duplicates.
 
 ### Manual:
 ```bash

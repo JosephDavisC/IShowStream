@@ -175,12 +175,45 @@ class PriorityAgent:
 
         except Exception as e:
             print(f"❌ {self.agent_name} Error: {e}")
+
+            # Smart fallback: Use keyword-based priority detection
+            message_lower = message.lower()
+
+            # High priority keywords (7-10)
+            if any(word in message_lower for word in ['?', 'how', 'what', 'when', 'where', 'why', 'help', 'issue', 'problem', 'broken', 'bug', 'error', 'crash', 'audio', 'video', 'lag', 'freeze']):
+                priority = 8 if any(urgent in message_lower for urgent in ['help', 'issue', 'problem', 'broken', 'crash', 'error']) else 7
+                category = "question" if '?' in message else "technical"
+                reason = "High-priority keyword detected (fallback mode)"
+            # Medium-high priority (6-7)
+            elif any(word in message_lower for word in ['suggestion', 'idea', 'should', 'could', 'would', 'recommend', 'feedback', 'opinion']):
+                priority = 7
+                category = "suggestion"
+                reason = "Constructive feedback detected (fallback mode)"
+            # Medium priority (4-5)
+            elif len(message.split()) > 10:
+                priority = 5
+                category = "chat"
+                reason = "Longer message, possible engagement (fallback mode)"
+            # Low priority (1-3)
+            else:
+                priority = 3
+                category = "reaction"
+                reason = "Short message or reaction (fallback mode)"
+
+            # Boost for subs/mods
+            if is_mod:
+                priority = min(10, priority + 2)
+                reason += " [Moderator +2]"
+            elif is_sub:
+                priority = min(10, priority + 1)
+                reason += " [Subscriber +1]"
+
             return {
-                "priority": 5,
-                "category": "unknown",
-                "reason": f"Analysis error: {str(e)}",
+                "priority": priority,
+                "category": category,
+                "reason": reason,
                 "agent": self.agent_name,
-                "actionable": False,
+                "actionable": priority >= 7,
                 "processed_by": self.agent_name,
                 "agent_version": self.agent_version
             }

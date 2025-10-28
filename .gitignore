@@ -1,25 +1,51 @@
-# Credentials
+# Credentials & Secrets
 *.env
 config/secrets.json
 *.pem
 *.key
+credentials.json
 
 # Dependencies
 node_modules/
 __pycache__/
 *.pyc
+venv/
 vendor/
+package-lock.json
 
 # Build outputs
 dist/
 build/
 *.exe
+*.out
+
+# Logs & Runtime
+logs/*.log
+*.log
+.pids/
+.all-pids
+.backend-pids
 
 # IDE
 .vscode/
 .idea/
 *.swp
+*.swo
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Python
+*.egg-info/
+.pytest_cache/
+.coverage
+
+# Go
+go.sum
+*.test
+
+# Temporary files
+tmp/
+temp/
+*.tmp

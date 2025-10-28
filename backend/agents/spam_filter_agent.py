@@ -142,12 +142,47 @@ class SpamFilterAgent:
 
         except Exception as e:
             print(f"❌ {self.agent_name} Error: {e}")
+
+            # Smart fallback: Basic spam detection rules
+            message_lower = message.lower()
+
+            # Check for spam indicators
+            is_spam = False
+            spam_type = "clean"
+            confidence = 0
+            reason = "Clean message (fallback mode)"
+
+            # Excessive repetition
+            if len(set(message)) < len(message) / 3 and len(message) > 10:
+                is_spam = True
+                spam_type = "repetition"
+                confidence = 85
+                reason = "Excessive character repetition detected (fallback mode)"
+            # ALL CAPS (aggressive)
+            elif len(message) > 15 and message.isupper():
+                is_spam = True
+                spam_type = "caps"
+                confidence = 70
+                reason = "Excessive caps detected (fallback mode)"
+            # Common spam keywords
+            elif any(spam_word in message_lower for spam_word in ['buy now', 'click here', 'free money', 'get rich', 'limited offer', 'act now', 'visit my', 'check out my channel', 'follow me at']):
+                is_spam = True
+                spam_type = "promotional"
+                confidence = 90
+                reason = "Promotional spam keyword detected (fallback mode)"
+            # Excessive links (more than 2)
+            elif message_lower.count('http') > 2 or message_lower.count('www.') > 2:
+                is_spam = True
+                spam_type = "links"
+                confidence = 95
+                reason = "Excessive links detected (fallback mode)"
+
             return {
-                "is_spam": False,
-                "confidence": 0,
-                "reason": f"Analysis error: {str(e)}",
+                "is_spam": is_spam,
+                "confidence": confidence,
+                "reason": reason,
                 "agent": self.agent_name,
-                "spam_type": "error",
+                "spam_type": spam_type,
                 "processed_by": self.agent_name,
                 "agent_version": self.agent_version
             }
