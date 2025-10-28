@@ -58,29 +58,6 @@ body {
   font-weight: 700;
 }
 
-/* Layout Toggle Button */
-.layout-toggle-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: #3a3a3d;
-  border: none;
-  border-radius: 4px;
-  color: #efeff1;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.layout-toggle-btn:hover {
-  background: #464649;
-}
-
-.layout-toggle-btn:active {
-  transform: scale(0.95);
-}
 
 /* Streamer Profile - Twitch Style */
 .streamer-profile {
@@ -220,62 +197,42 @@ body {
   font-weight: bold;
 }
 
-/* Main Layout Modes */
-.main-layout {
-  display: flex;
-  flex: 1;
+/* AI Insights Main Section - Large and Prominent */
+.section-insights-main {
+  margin-bottom: 10px;
+}
+
+.section-insights-main .ai-insights {
+  min-height: 300px;
+}
+
+/* Content Grid - Two Columns */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
   gap: 10px;
-  overflow: hidden;
-}
-
-.main-layout.horizontal {
-  flex-direction: row;
-}
-
-.main-layout.vertical {
-  flex-direction: column;
-}
-
-.insights-section-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  overflow-y: auto;
-}
-
-.main-layout.horizontal .insights-section-wrapper {
-  flex: 1;
-  min-width: 0;
-}
-
-.main-layout.vertical .insights-section-wrapper {
-  flex: 0 0 auto;
+  margin-bottom: 10px;
+  min-height: 500px;
 }
 
 .chat-section-wrapper {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
-
-.main-layout.horizontal .chat-section-wrapper {
-  flex: 0 0 400px;
   min-height: 0;
 }
 
-.main-layout.vertical .chat-section-wrapper {
-  flex: 1;
-  min-height: 400px;
+.priority-section-wrapper {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
 }
 
 @media (max-width: 1200px) {
-  .main-layout.horizontal {
-    flex-direction: column;
-  }
-
-  .main-layout.horizontal .chat-section-wrapper {
-    flex: 1;
-    min-height: 400px;
+  .content-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 500px 400px;
   }
 }
 
@@ -297,9 +254,6 @@ body {
   font-weight: 600;
 }
 
-.section-priority-vertical .priority-messages {
-  max-height: 400px;
-}
 
 .message-list {
   display: flex;

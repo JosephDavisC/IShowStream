@@ -80,6 +80,7 @@ class AgentOrchestrator:
         self.total_processed = 0
         self.spam_detected = 0
         self.high_priority_count = 0
+        self.last_trend_analysis = time.time()  # Track when we last ran trend analysis
 
         # Agent Activity Logging
         self.activity_collection = self.db.collection('agent_activity')
@@ -107,6 +108,100 @@ class AgentOrchestrator:
     def _percent(self, part, whole):
         """Calculate percentage"""
         return round((part / whole * 100) if whole > 0 else 0, 1)
+
+    def run_trend_analysis(self):
+        """
+        Run TrendAgent to analyze recent messages for trending topics
+        This runs periodically (every 5 minutes) to detect trends across multiple messages
+        """
+        try:
+            print("\n" + "=" * 70)
+            print("📊 Agent 4: TrendAgent - Analyzing recent messages for trends...")
+            print("=" * 70)
+
+            # Get last 50 messages from Firestore
+            query = (self.db.collection('messages')
+                    .order_by('timestamp', direction=firestore.Query.DESCENDING)
+                    .limit(50))
+
+            docs = query.stream()
+            messages = []
+            for doc in docs:
+                msg = doc.to_dict()
+                messages.append({
+                    'username': msg.get('username', 'Unknown'),
+                    'message': msg.get('message', ''),
+                    'timestamp': msg.get('timestamp')
+                })
+
+            if len(messages) < 5:
+                print("⚠️  Not enough messages for trend analysis (need at least 5)")
+                return
+
+            print(f"   Analyzing {len(messages)} recent messages...")
+
+            # Log: TrendAgent started
+            self.log_activity(
+                activity_type="agent_start",
+                agent_name="TrendAgent",
+                message_data={'username': 'System', 'message': f'Analyzing {len(messages)} messages'},
+                status="processing"
+            )
+
+            # Run trend analysis
+            trend_result = self.trend_agent.analyze_trends(messages, time_window_minutes=5)
+
+            # Display results
+            print(f"\n   📈 Trend Analysis Results:")
+            print(f"      Overall Mood: {trend_result.get('overall_mood', 'unknown')}")
+            print(f"      Spam Wave Detected: {trend_result.get('spam_wave_detected', False)}")
+
+            if trend_result.get('trending_topics'):
+                print(f"\n      🔥 Trending Topics:")
+                for topic in trend_result['trending_topics'][:3]:
+                    print(f"         • {topic['topic']} - {topic['mentions']} mentions ({topic['trend_strength']})")
+
+            if trend_result.get('top_words'):
+                top_words = ', '.join([f"{w}({c}x)" for w, c in trend_result['top_words'][:5]])
+                print(f"\n      💬 Top Words: {top_words}")
+
+            if trend_result.get('top_emotes'):
+                top_emotes = ', '.join([f"{e}({c}x)" for e, c in trend_result['top_emotes'][:5]])
+                print(f"      😀 Top Emotes: {top_emotes}")
+
+            # Save trend analysis to Firestore
+            self.db.collection('trends').add({
+                'timestamp': firestore.SERVER_TIMESTAMP,
+                'analysis': trend_result,
+                'message_count': len(messages),
+                'time_window_minutes': 5
+            })
+
+            # Log: TrendAgent complete
+            self.log_activity(
+                activity_type="agent_complete",
+                agent_name="TrendAgent",
+                message_data={'username': 'System', 'message': f'Analyzed {len(messages)} messages'},
+                result_data={
+                    'trending_topics': trend_result.get('trending_topics', [])[:3],
+                    'overall_mood': trend_result.get('overall_mood', 'unknown'),
+                    'spam_wave': trend_result.get('spam_wave_detected', False)
+                },
+                status="complete"
+            )
+
+            print("   ✅ Trend analysis complete!")
+            print("=" * 70 + "\n")
+
+        except Exception as e:
+            print(f"   ❌ TrendAgent error: {e}")
+            self.log_activity(
+                activity_type="agent_complete",
+                agent_name="TrendAgent",
+                message_data={'username': 'System', 'message': 'Trend analysis failed'},
+                result_data={'error': str(e)},
+                status="error"
+            )
 
     def log_activity(self, activity_type, agent_name, message_data, result_data=None, status="processing"):
         """
@@ -162,8 +257,17 @@ class AgentOrchestrator:
         print("📋 Agent Pipeline: Message → SpamFilter → Priority → Engagement → Trend → Dashboard")
         print()
 
+        # Run initial trend analysis on startup
+        self.run_trend_analysis()
+
         while self.running:
             try:
+                # Run TrendAgent every 5 minutes (300 seconds)
+                current_time = time.time()
+                if current_time - self.last_trend_analysis >= 300:  # 5 minutes
+                    self.run_trend_analysis()
+                    self.last_trend_analysis = current_time
+
                 # Get recent unprocessed messages
                 query = (self.db.collection('messages')
                         .order_by('timestamp', direction=firestore.Query.DESCENDING)

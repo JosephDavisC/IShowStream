@@ -28,15 +28,15 @@ def generate_insights():
     agent = InsightAgent()
 
     print("🧠 StreamSense Insight Generator Started!")
-    print("📊 Analyzing chat every 30 seconds for actionable insights...\n")
+    print("📊 Analyzing chat every 1 minute for actionable insights...\n")
 
     while True:
         try:
-            # Get messages from last 30 seconds
-            thirty_seconds_ago = datetime.utcnow() - timedelta(seconds=30)
+            # Get messages from last 1 minute
+            one_minute_ago = datetime.utcnow() - timedelta(seconds=60)
 
             query = db.collection('messages').where(
-                'timestamp', '>=', thirty_seconds_ago
+                'timestamp', '>=', one_minute_ago
             ).order_by('timestamp').limit(100)
 
             docs = query.stream()
@@ -55,7 +55,7 @@ def generate_insights():
                 time.sleep(10)  # Wait 10 seconds before checking again
                 continue
 
-            print(f"\n📨 Analyzing {len(messages)} messages from last 30 seconds...")
+            print(f"\n📨 Analyzing {len(messages)} messages from last 1 minute...")
 
             # Generate insights
             insights = agent.analyze_batch(messages)
@@ -66,7 +66,7 @@ def generate_insights():
                     'timestamp': firestore.SERVER_TIMESTAMP,
                     'message_count': len(messages),
                     'insights': insights,
-                    'timeframe': '30_seconds'
+                    'timeframe': '1_minute'
                 }
 
                 db.collection('insights').add(insight_doc)
@@ -100,9 +100,9 @@ def generate_insights():
                 print(f"✅ Insights saved to Firestore")
                 print("="*60 + "\n")
 
-            # Wait 30 seconds before next analysis
-            print("⏰ Waiting 30 seconds for next analysis...\n")
-            time.sleep(30)  # 30 seconds
+            # Wait 1 minute before next analysis
+            print("⏰ Waiting 1 minute for next analysis...\n")
+            time.sleep(60)  # 1 minute
 
         except KeyboardInterrupt:
             print("\n👋 Shutting down insight generator...")

@@ -1,13 +1,43 @@
 import React from 'react';
 
 function AIInsights({ insights }) {
+  // Helper function to format timestamp from Firestore
+  const formatTimestamp = (timestamp) => {
+    try {
+      let date;
+      if (timestamp?.seconds) {
+        // Firestore Timestamp format
+        date = new Date(timestamp.seconds * 1000);
+      } else if (timestamp?._seconds) {
+        // Alternative Firestore format
+        date = new Date(timestamp._seconds * 1000);
+      } else {
+        // Try parsing as string/number
+        date = new Date(timestamp);
+      }
+
+      if (isNaN(date.getTime())) {
+        return 'just now';
+      }
+
+      return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+    } catch (error) {
+      return 'just now';
+    }
+  };
+
   if (!insights || !insights.insights) {
     return (
       <div className="ai-insights">
         <h2>🧠 AI Insights</h2>
         <div className="no-insights">
           <p>No insights available yet.</p>
-          <p className="hint">Insights are generated every 5 minutes</p>
+          <p className="hint">Insights are generated every 1 minute</p>
         </div>
       </div>
     );
@@ -106,7 +136,7 @@ function AIInsights({ insights }) {
       <div className="insights-meta">
         <small>
           Based on {insights.message_count || 0} messages
-          {insights.timestamp && ` • Last updated: ${new Date(insights.timestamp.seconds * 1000).toLocaleTimeString()}`}
+          {insights.timestamp && ` • Last updated: ${formatTimestamp(insights.timestamp)}`}
         </small>
       </div>
     </div>
