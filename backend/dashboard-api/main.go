@@ -8,9 +8,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sync"
 	"time"
 
 	"cloud.google.com/go/firestore"
+	"github.com/gorilla/websocket"
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 	"google.golang.org/api/iterator"
@@ -62,7 +64,29 @@ type AgentActivity struct {
 	Result       map[string]interface{} `json:"result,omitempty"`
 }
 
+// WebSocket types
+type Client struct {
+	hub  *Hub
+	conn *websocket.Conn
+	send chan []byte
+}
+
+type Hub struct {
+	clients    map[*Client]bool
+	broadcast  chan []byte
+	register   chan *Client
+	unregister chan *Client
+	mu         sync.RWMutex
+}
+
 var firestoreClient *firestore.Client
+var wsHub *Hub
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		// Allow connections from localhost:3000 (React dev server)
+		return true
+	},
+}
 
 func main() {
 	// Load environment variables
@@ -81,6 +105,12 @@ func main() {
 
 	log.Println("✅ Connected to Firestore")
 
+	// Initialize WebSocket hub
+	wsHub = newHub()
+	go wsHub.run()
+	go listenForAgentActivity(ctx)
+	log.Println("✅ WebSocket hub started")
+
 	// Set up routes
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/messages/recent", getRecentMessages)
@@ -89,6 +119,7 @@ func main() {
 	mux.HandleFunc("/api/insights/latest", getLatestInsights)
 	mux.HandleFunc("/api/streamer", getStreamerInfo)
 	mux.HandleFunc("/api/agent-activity", getAgentActivity)
+	mux.HandleFunc("/ws", handleWebSocket)
 	mux.HandleFunc("/health", healthCheck)
 
 	// Enable CORS
@@ -405,4 +436,192 @@ func getString(data map[string]interface{}, key string) string {
 func healthCheck(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("OK"))
+}
+
+// WebSocket Hub functions
+func newHub() *Hub {
+	return &Hub{
+		clients:    make(map[*Client]bool),
+		broadcast:  make(chan []byte),
+		register:   make(chan *Client),
+		unregister: make(chan *Client),
+	}
+}
+
+func (h *Hub) run() {
+	for {
+		select {
+		case client := <-h.register:
+			h.mu.Lock()
+			h.clients[client] = true
+			h.mu.Unlock()
+			log.Printf("WebSocket client connected. Total clients: %d", len(h.clients))
+
+		case client := <-h.unregister:
+			h.mu.Lock()
+			if _, ok := h.clients[client]; ok {
+				delete(h.clients, client)
+				close(client.send)
+			}
+			h.mu.Unlock()
+			log.Printf("WebSocket client disconnected. Total clients: %d", len(h.clients))
+
+		case message := <-h.broadcast:
+			h.mu.RLock()
+			for client := range h.clients {
+				select {
+				case client.send <- message:
+				default:
+					close(client.send)
+					delete(h.clients, client)
+				}
+			}
+			h.mu.RUnlock()
+		}
+	}
+}
+
+// WebSocket Client functions
+func (c *Client) readPump() {
+	defer func() {
+		c.hub.unregister <- c
+		c.conn.Close()
+	}()
+
+	c.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+	c.conn.SetPongHandler(func(string) error {
+		c.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+		return nil
+	})
+
+	for {
+		_, _, err := c.conn.ReadMessage()
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				log.Printf("WebSocket error: %v", err)
+			}
+			break
+		}
+	}
+}
+
+func (c *Client) writePump() {
+	ticker := time.NewTicker(54 * time.Second)
+	defer func() {
+		ticker.Stop()
+		c.conn.Close()
+	}()
+
+	for {
+		select {
+		case message, ok := <-c.send:
+			c.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+			if !ok {
+				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+				return
+			}
+
+			w, err := c.conn.NextWriter(websocket.TextMessage)
+			if err != nil {
+				return
+			}
+			w.Write(message)
+
+			// Add queued messages to current websocket message
+			n := len(c.send)
+			for i := 0; i < n; i++ {
+				w.Write([]byte{'\n'})
+				w.Write(<-c.send)
+			}
+
+			if err := w.Close(); err != nil {
+				return
+			}
+
+		case <-ticker.C:
+			c.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				return
+			}
+		}
+	}
+}
+
+func handleWebSocket(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Printf("WebSocket upgrade error: %v", err)
+		return
+	}
+
+	client := &Client{
+		hub:  wsHub,
+		conn: conn,
+		send: make(chan []byte, 256),
+	}
+	client.hub.register <- client
+
+	// Start read and write pumps in goroutines
+	go client.writePump()
+	go client.readPump()
+
+	log.Println("✅ New WebSocket client connected")
+}
+
+func listenForAgentActivity(ctx context.Context) {
+	log.Println("👂 Starting Firestore listener for agent activity...")
+
+	// Listen for new agent activity documents
+	iter := firestoreClient.Collection("agent_activity").
+		OrderBy("timestamp", firestore.Desc).
+		Limit(1).
+		Snapshots(ctx)
+
+	defer iter.Stop()
+
+	for {
+		snap, err := iter.Next()
+		if err != nil {
+			log.Printf("⚠️  Firestore listener error: %v", err)
+			time.Sleep(5 * time.Second)
+			continue
+		}
+
+		for _, change := range snap.Changes {
+			if change.Kind == firestore.DocumentAdded {
+				data := change.Doc.Data()
+				activity := AgentActivity{
+					ID:           change.Doc.Ref.ID,
+					ActivityType: getString(data, "activity_type"),
+					Agent:        getString(data, "agent"),
+					Status:       getString(data, "status"),
+				}
+
+				// Parse timestamp
+				if ts, ok := data["timestamp"].(time.Time); ok {
+					activity.Timestamp = ts
+				}
+
+				// Parse message
+				if msg, ok := data["message"].(map[string]interface{}); ok {
+					activity.Message = msg
+				}
+
+				// Parse result if present
+				if result, ok := data["result"].(map[string]interface{}); ok {
+					activity.Result = result
+				}
+
+				// Broadcast to all WebSocket clients
+				activityJSON, err := json.Marshal(map[string]interface{}{
+					"type":     "agent_activity",
+					"activity": activity,
+				})
+				if err == nil {
+					wsHub.broadcast <- activityJSON
+					log.Printf("📡 Broadcasted agent activity: %s - %s", activity.Agent, activity.ActivityType)
+				}
+			}
+		}
+	}
 }

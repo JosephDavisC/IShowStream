@@ -18,8 +18,9 @@ function App() {
   const [isHorizontalLayout, setIsHorizontalLayout] = useState(true);
 
   const API_URL = 'http://localhost:8082';
+  const WS_URL = 'ws://localhost:8082/ws';
 
-  // Fetch data from API
+  // Fetch initial data from API
   const fetchData = async () => {
     try {
       // Fetch stats
@@ -59,11 +60,56 @@ function App() {
     }
   };
 
-  // Fetch data on mount and every 3 seconds
+  // Fetch data on mount and poll every 5 seconds for non-realtime data
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 3000);
+    // Poll less frequently since WebSocket handles real-time updates
+    const interval = setInterval(fetchData, 5000);
     return () => clearInterval(interval);
+  }, []);
+
+  // WebSocket connection for real-time agent activity
+  useEffect(() => {
+    const ws = new WebSocket(WS_URL);
+
+    ws.onopen = () => {
+      console.log('✅ WebSocket connected');
+      setIsLive(true);
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+
+        if (data.type === 'agent_activity') {
+          // Add new activity to the top of the list
+          setAgentActivities(prev => [data.activity, ...prev].slice(0, 50));
+          console.log('📡 Received agent activity:', data.activity);
+        }
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+      setIsLive(false);
+    };
+
+    ws.onclose = () => {
+      console.log('⚠️  WebSocket disconnected');
+      setIsLive(false);
+
+      // Attempt to reconnect after 3 seconds
+      setTimeout(() => {
+        console.log('🔄 Reconnecting WebSocket...');
+      }, 3000);
+    };
+
+    // Cleanup WebSocket on unmount
+    return () => {
+      ws.close();
+    };
   }, []);
 
   return (

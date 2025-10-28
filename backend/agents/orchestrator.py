@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 
 from spam_filter_agent import SpamFilterAgent
 from priority_agent import PriorityAgent
+from engagement_agent import EngagementAgent
+from trend_agent import TrendAgent
 
 load_dotenv('../../config/.env')
 
@@ -58,8 +60,18 @@ class AgentOrchestrator:
         print(f"    Capabilities: {', '.join(priority_info['capabilities'])}")
         print(f"    Depends on: {', '.join(priority_info['depends_on'])}")
 
+        self.engagement_agent = EngagementAgent()
+        print(f"  ✓ EngagementAgent v1.0")
+        print(f"    Role: Predict message engagement potential")
+        print(f"    Capabilities: conversation_prediction, streamer_response_recommendation")
+
+        self.trend_agent = TrendAgent()
+        print(f"  ✓ TrendAgent v1.0")
+        print(f"    Role: Detect trending topics and patterns")
+        print(f"    Capabilities: trend_detection, meme_tracking, spam_wave_detection")
+
         print("-" * 70)
-        print("✅ All agents initialized!")
+        print("✅ All 4 agents initialized!")
         print()
 
         # ADK State Management
@@ -147,7 +159,7 @@ class AgentOrchestrator:
         """
         print("🚀 ADK Multi-Agent Orchestrator Started!")
         print("👀 Monitoring Firestore for new messages...")
-        print("📋 Agent Pipeline: Message → SpamFilter → Priority → Dashboard")
+        print("📋 Agent Pipeline: Message → SpamFilter → Priority → Engagement → Trend → Dashboard")
         print()
 
         while self.running:
@@ -208,8 +220,8 @@ class AgentOrchestrator:
                         'processed_by_host': os.uname().nodename if hasattr(os, 'uname') else os.getenv('HOSTNAME', 'unknown'),
                         'processed_by_pid': os.getpid(),
                         'processed_at': firestore.SERVER_TIMESTAMP,
-                        'orchestrator_version': '2.0-ADK',
-                        'agent_pipeline': ['SpamFilterAgent', 'PriorityAgent']
+                        'orchestrator_version': '3.0-ADK',
+                        'agent_pipeline': ['SpamFilterAgent', 'PriorityAgent', 'EngagementAgent', 'TrendAgent']
                     }
 
                     if spam_result['is_spam']:
@@ -312,15 +324,48 @@ class AgentOrchestrator:
                     if priority_result['priority'] >= 7:
                         self.high_priority_count += 1
 
+                    # ═══════════════════════════════════════════════════
+                    # AGENT 3: EngagementAgent
+                    # ═══════════════════════════════════════════════════
+                    print("   🎯 Agent 3: EngagementAgent analyzing...")
+
+                    # Log: EngagementAgent started
+                    self.log_activity(
+                        activity_type="agent_start",
+                        agent_name="EngagementAgent",
+                        message_data={'username': username, 'message': message_text},
+                        status="processing"
+                    )
+
+                    engagement_result = self.engagement_agent.analyze_engagement(
+                        username, message_text
+                    )
+
+                    print(f"   ✅ Engagement Score: {engagement_result['engagement_score']}/10")
+                    print(f"      Category: {engagement_result['category']}")
+                    print(f"      Will Spark Conversation: {engagement_result['will_spark_conversation']}")
+                    print(f"      Streamer Should Respond: {engagement_result['streamer_should_respond']}")
+                    print(f"      {engagement_result['reason']}")
+
+                    # Log: EngagementAgent complete
+                    self.log_activity(
+                        activity_type="agent_complete",
+                        agent_name="EngagementAgent",
+                        message_data={'username': username, 'message': message_text},
+                        result_data=engagement_result,
+                        status="complete"
+                    )
+
                     # Update Firestore with complete multi-agent analysis
                     if os.getenv('DISABLE_FIRESTORE_WRITES', '0') in ('0', 'false', 'False', ''):
                         doc.reference.update({
                             'agent_analysis': {
                                 'spam': spam_result,
                                 'priority': priority_result,
+                                'engagement': engagement_result,
                                 'processed_at': firestore.SERVER_TIMESTAMP,
                                 'pipeline_completed': True,
-                                'agents_executed': [spam_result['processed_by'], priority_result['processed_by']]
+                                'agents_executed': [spam_result['processed_by'], priority_result['processed_by'], 'EngagementAgent']
                             },
                             'processing_metadata': metadata,
                         })
@@ -333,8 +378,9 @@ class AgentOrchestrator:
                         agent_name="System",
                         message_data={'username': username, 'message': message_text},
                         result_data={
-                            'agents_executed': ['SpamFilterAgent', 'PriorityAgent'],
+                            'agents_executed': ['SpamFilterAgent', 'PriorityAgent', 'EngagementAgent'],
                             'final_priority': priority_result['priority'],
+                            'engagement_score': engagement_result['engagement_score'],
                             'spam_filtered': False
                         },
                         status="complete"
@@ -344,9 +390,10 @@ class AgentOrchestrator:
                     self.total_processed += 1
                     print()
 
-                    # Rate limiting: wait 12 seconds between messages
-                    print("⏰ Rate limit: Waiting 12s...")
-                    for _ in range(12):
+                    # Rate limiting: wait 18 seconds between messages
+                    # (3 AI agents * 6 seconds = 18 seconds to stay under 10 req/min)
+                    print("⏰ Rate limit: Waiting 18s...")
+                    for _ in range(18):
                         if not self.running:
                             break
                         time.sleep(1)
