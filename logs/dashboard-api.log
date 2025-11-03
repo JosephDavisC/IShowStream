@@ -1,2 +1,13 @@
-2025/10/27 14:11:30 ✅ Connected to Firestore
-2025/10/27 14:11:30 🚀 Dashboard API starting on port 8082
+2025/11/02 18:35:11 ✅ Connected to Firestore
+2025/11/02 18:35:11 ✅ WebSocket hub started
+2025/11/02 18:35:11 👂 Starting Firestore listener for agent activity...
+2025/11/02 18:35:11 🚀 Dashboard API starting on port 8082
+2025/11/02 18:35:11 🔥 Starting Hype Meter tracker...
+2025/11/02 18:35:12 📡 Broadcasted agent activity: TrendAgent - agent_complete
+2025/11/02 18:35:15 📡 Broadcasted agent activity: TrendAgent - agent_start
+2025/11/02 18:35:27 📡 Broadcasted agent activity: TrendAgent - agent_complete
+2025/11/02 18:35:36 ✅ New WebSocket client connected
+2025/11/02 18:35:36 WebSocket client connected. Total clients: 1
+2025/11/02 18:35:36 ✅ New WebSocket client connected
+2025/11/02 18:35:36 WebSocket client connected. Total clients: 2
+2025/11/02 18:35:36 WebSocket client disconnected. Total clients: 1

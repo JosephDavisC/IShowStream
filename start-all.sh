@@ -9,6 +9,7 @@ echo "This will start:"
 echo "  📡 Chat Ingestion (Port 8080)"
 echo "  🔧 Dashboard API (Port 8082)"
 echo "  🤖 AI Agents (Python)"
+echo "  🧠 Insight Processor (Background)"
 echo "  💻 Frontend Dashboard (Port 3000)"
 echo ""
 
@@ -84,10 +85,24 @@ echo $AGENTS_PID > ../../.pids/agents.pid
 cd ../..
 sleep 2
 
+# Start insight processor
+echo "🧠 Starting Insight Processor..."
+cd backend/agents
+if [ -d "venv" ]; then
+    source venv/bin/activate
+fi
+python insight_processor.py > ../../logs/insight-processor.log 2>&1 &
+INSIGHT_PID=$!
+echo "   Started with PID: $INSIGHT_PID"
+echo $INSIGHT_PID > ../../.pids/insight-processor.pid
+cd ../..
+sleep 2
+
 # Start frontend
 echo "💻 Starting Frontend Dashboard (Port 3000)..."
 cd frontend/dashboard
-npm start > ../../logs/frontend.log 2>&1 &
+# Prevent npm from auto-opening browser (we'll do it manually once)
+BROWSER=none npm start > ../../logs/frontend.log 2>&1 &
 FRONTEND_PID=$!
 echo "   Started with PID: $FRONTEND_PID"
 echo $FRONTEND_PID > ../../.pids/frontend.pid
@@ -107,6 +122,7 @@ echo "📊 Service Status:"
 echo "  📡 Chat Ingestion: http://localhost:8080 (PID: $CHAT_PID)"
 echo "  🔧 Dashboard API:  http://localhost:8082 (PID: $API_PID)"
 echo "  🤖 AI Agents:      Running (PID: $AGENTS_PID)"
+echo "  🧠 Insight Processor: Running (PID: $INSIGHT_PID)"
 echo "  💻 Frontend:       http://localhost:3000 (PID: $FRONTEND_PID)"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -117,6 +133,7 @@ echo "📋 View logs:"
 echo "  tail -f logs/chat-ingestion.log"
 echo "  tail -f logs/dashboard-api.log"
 echo "  tail -f logs/agents.log"
+echo "  tail -f logs/insight-processor.log"
 echo "  tail -f logs/frontend.log"
 echo ""
 echo "🛑 To stop all services:"
@@ -124,15 +141,15 @@ echo "  ./stop-all.sh"
 echo ""
 
 # Save all PIDs for reference
-echo "$CHAT_PID $API_PID $AGENTS_PID $FRONTEND_PID" > .all-pids
+echo "$CHAT_PID $API_PID $AGENTS_PID $INSIGHT_PID $FRONTEND_PID" > .all-pids
 
-# Try to open browser automatically
-echo "🌐 Attempting to open browser..."
-sleep 5
+# Try to open browser automatically (wait a bit longer for React to compile)
+echo "🌐 Waiting for frontend to be ready..."
+sleep 10
 if command -v open &> /dev/null; then
-    open http://localhost:3000
+    open http://localhost:3000 2>/dev/null || true
 elif command -v xdg-open &> /dev/null; then
-    xdg-open http://localhost:3000
+    xdg-open http://localhost:3000 2>/dev/null || true
 else
     echo "   Please manually open: http://localhost:3000"
 fi

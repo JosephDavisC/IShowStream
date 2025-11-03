@@ -2,6 +2,8 @@ import os
 import signal
 import time
 from google.cloud import firestore
+from google import genai
+from google.genai import types
 from dotenv import load_dotenv
 
 from spam_filter_agent import SpamFilterAgent
@@ -260,6 +262,25 @@ class AgentOrchestrator:
         # Run initial trend analysis on startup
         self.run_trend_analysis()
 
+        # Batch settings
+        enable_batch = os.getenv('ENABLE_BATCH', '1') in ('1', 'true', 'TRUE')
+        batch_size = int(os.getenv('BATCH_SIZE', '20'))
+        min_batch = int(os.getenv('MIN_BATCH_SIZE', '10'))
+        allow_per_message_fallback = os.getenv('FALLBACK_PER_MESSAGE', '0') in ('1', 'true', 'TRUE')
+        api_key = os.getenv('GOOGLE_API_KEY')
+        batch_client = genai.Client(api_key=api_key) if enable_batch and api_key else None
+        batch_config = types.GenerateContentConfig(
+            system_instruction=(
+                "You are a single-call analyzer for Twitch chat messages. Given a list of"
+                " messages, return JSON with one entry per message, preserving the input id."
+                " For each message output: is_spam(bool), spam_type, spam_confidence(0-100),"
+                " priority(1-10), category, reason, engagement_score(1-10), will_spark_conversation(bool),"
+                " streamer_should_respond(bool). Respond ONLY with valid JSON array."
+            ),
+            temperature=0.2,
+            response_mime_type="application/json",
+        ) if batch_client else None
+
         while self.running:
             try:
                 # Run TrendAgent every 5 minutes (300 seconds)
@@ -268,7 +289,122 @@ class AgentOrchestrator:
                     self.run_trend_analysis()
                     self.last_trend_analysis = current_time
 
-                # Get recent unprocessed messages
+                # Try batched processing first
+                if enable_batch and batch_client:
+                    query = (self.db.collection('messages')
+                            .order_by('timestamp', direction=firestore.Query.DESCENDING)
+                            .limit(batch_size))
+
+                    docs = list(query.stream())
+
+                    batch_items = []
+                    for doc in docs:
+                        if doc.id in self.processed_docs:
+                            continue
+                        data = doc.to_dict()
+                        if 'agent_analysis' in data:
+                            self.processed_docs.add(doc.id)
+                            continue
+                        batch_items.append({
+                            'id': doc.id,
+                            'username': data.get('username', 'Unknown'),
+                            'message': data.get('message', ''),
+                            'is_sub': data.get('is_sub', False),
+                            'is_mod': data.get('is_mod', False),
+                        })
+
+                    if batch_items and len(batch_items) >= min_batch:
+                        try:
+                            # Build concise JSON input for the model
+                            import json as _json
+                            prompt = _json.dumps({'messages': batch_items}, ensure_ascii=False)
+                            response = batch_client.models.generate_content(
+                                model='gemini-2.5-flash',
+                                contents=prompt,
+                                config=batch_config,
+                            )
+                            results = _json.loads(response.text)
+
+                            # Index results by id
+                            id_to_result = {r.get('id'): r for r in results if isinstance(r, dict) and r.get('id')}
+
+                            for doc in docs:
+                                if doc.id not in id_to_result:
+                                    continue
+                                r = id_to_result[doc.id]
+
+                                # Compose outputs similar to existing structure
+                                spam_result = {
+                                    'is_spam': bool(r.get('is_spam', False)),
+                                    'confidence': int(r.get('spam_confidence', 0)),
+                                    'reason': r.get('reason', '') or 'Batched analysis',
+                                    'agent': 'SpamFilterAgent',
+                                    'spam_type': r.get('spam_type', 'none'),
+                                    'processed_by': 'SpamFilterAgent',
+                                    'agent_version': '2.0-ADK',
+                                }
+                                priority_result = {
+                                    'priority': max(1, min(10, int(r.get('priority', 3)))),
+                                    'category': r.get('category', 'reaction'),
+                                    'reason': r.get('reason', 'Batched analysis'),
+                                    'agent': 'PriorityAgent',
+                                    'actionable': bool(r.get('priority', 0) >= 7),
+                                    'processed_by': 'PriorityAgent',
+                                    'agent_version': '2.0-ADK',
+                                }
+                                engagement_result = {
+                                    'engagement_score': max(1, min(10, int(r.get('engagement_score', 3)))),
+                                    'category': r.get('category', 'reaction'),
+                                    'reason': r.get('reason', 'Batched analysis'),
+                                    'will_spark_conversation': bool(r.get('will_spark_conversation', False)),
+                                    'streamer_should_respond': bool(r.get('streamer_should_respond', False)),
+                                }
+
+                                metadata = {
+                                    'processed_by_host': os.uname().nodename if hasattr(os, 'uname') else os.getenv('HOSTNAME', 'unknown'),
+                                    'processed_by_pid': os.getpid(),
+                                    'processed_at': firestore.SERVER_TIMESTAMP,
+                                    'orchestrator_version': '3.0-ADK',
+                                    'agent_pipeline': ['BatchGemini'],
+                                }
+
+                                doc.reference.update({
+                                    'agent_analysis': {
+                                        'spam': spam_result,
+                                        'priority': priority_result,
+                                        'engagement': engagement_result,
+                                        'processed_at': firestore.SERVER_TIMESTAMP,
+                                        'pipeline_completed': True,
+                                        'agents_executed': ['BatchGemini'],
+                                    },
+                                    'processing_metadata': metadata,
+                                })
+
+                                self.processed_docs.add(doc.id)
+                                self.total_processed += 1
+
+                            # Batch pacing: keep RPM under limits
+                            print("⏰ Batch processed. Waiting 8s...")
+                            time.sleep(8)
+
+                            # Continue loop
+                            for _ in range(3):
+                                if not self.running:
+                                    break
+                                time.sleep(1)
+                            continue
+
+                        except Exception as _batch_err:
+                            print(f"⚠️  Batch analysis failed, falling back to per-message: {_batch_err}")
+                            if not allow_per_message_fallback:
+                                time.sleep(5)
+                                continue
+                    else:
+                        # Not enough new messages yet to reach the minimum batch size
+                        time.sleep(2)
+                        continue
+
+                # Fallback: per-message pipeline
                 query = (self.db.collection('messages')
                         .order_by('timestamp', direction=firestore.Query.DESCENDING)
                         .limit(5))

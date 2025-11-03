@@ -83,6 +83,12 @@ if [ -f "$PIDS_DIR/agents.pid" ]; then
     rm -f "$PIDS_DIR/agents.pid"
 fi
 
+if [ -f "$PIDS_DIR/insight-processor.pid" ]; then
+    INSIGHT_PID=$(cat "$PIDS_DIR/insight-processor.pid" 2>/dev/null)
+    kill_process_tree "$INSIGHT_PID" "Insight Processor"
+    rm -f "$PIDS_DIR/insight-processor.pid"
+fi
+
 if [ -f "$PIDS_DIR/frontend.pid" ]; then
     FRONTEND_PID=$(cat "$PIDS_DIR/frontend.pid" 2>/dev/null)
     kill_process_tree "$FRONTEND_PID" "Frontend"
@@ -137,7 +143,7 @@ fi
 # Kill any remaining Python orchestrator processes
 echo ""
 echo "�� Killing any remaining Python orchestrator processes..."
-PYTHON_PIDS=$(ps aux | grep "orchestrator.py" | grep -v grep | awk '{print $2}' || true)
+PYTHON_PIDS=$(ps aux | grep -E "(orchestrator\.py|insight_processor\.py)" | grep -v grep | awk '{print $2}' || true)
 if [ ! -z "$PYTHON_PIDS" ]; then
     echo "   Found Python processes: $PYTHON_PIDS"
     for PID in $PYTHON_PIDS; do
@@ -187,7 +193,7 @@ fi
 # Check for remaining processes
 echo ""
 echo "   Checking for remaining StreamSense processes..."
-REMAINING=$(ps aux | grep -E "(chat-ingestion|dashboard-api|orchestrator\.py)" | grep -v grep || true)
+REMAINING=$(ps aux | grep -E "(chat-ingestion|dashboard-api|orchestrator\.py|insight_processor\.py)" | grep -v grep || true)
 if [ -z "$REMAINING" ]; then
     echo "   ✅ No StreamSense processes found"
 else

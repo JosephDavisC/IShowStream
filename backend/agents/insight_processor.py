@@ -28,15 +28,15 @@ def generate_insights():
     agent = InsightAgent()
 
     print("🧠 StreamSense Insight Generator Started!")
-    print("📊 Analyzing chat every 1 minute for actionable insights...\n")
+    print("📊 Analyzing chat every 1 minute (analyzing last 5 minutes of messages)...\n")
 
     while True:
         try:
-            # Get messages from last 1 minute
-            one_minute_ago = datetime.utcnow() - timedelta(seconds=60)
+            # Get messages from last 5 minutes (more reliable than 1 minute)
+            five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
 
             query = db.collection('messages').where(
-                'timestamp', '>=', one_minute_ago
+                'timestamp', '>=', five_minutes_ago
             ).order_by('timestamp').limit(100)
 
             docs = query.stream()
@@ -55,7 +55,7 @@ def generate_insights():
                 time.sleep(10)  # Wait 10 seconds before checking again
                 continue
 
-            print(f"\n📨 Analyzing {len(messages)} messages from last 1 minute...")
+            print(f"\n📨 Analyzing {len(messages)} messages from last 5 minutes...")
 
             # Generate insights
             insights = agent.analyze_batch(messages)
@@ -66,7 +66,7 @@ def generate_insights():
                     'timestamp': firestore.SERVER_TIMESTAMP,
                     'message_count': len(messages),
                     'insights': insights,
-                    'timeframe': '1_minute'
+                    'timeframe': '5_minutes'
                 }
 
                 db.collection('insights').add(insight_doc)
@@ -100,7 +100,7 @@ def generate_insights():
                 print(f"✅ Insights saved to Firestore")
                 print("="*60 + "\n")
 
-            # Wait 1 minute before next analysis
+            # Wait 1 minute before next analysis (but we analyze last 5 min window)
             print("⏰ Waiting 1 minute for next analysis...\n")
             time.sleep(60)  # 1 minute
 

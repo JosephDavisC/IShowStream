@@ -5,6 +5,7 @@ import Stats from './components/Stats';
 import RecentMessages from './components/RecentMessages';
 import AIInsights from './components/AIInsights';
 import AgentActivityLog from './components/AgentActivityLog';
+import HypeBar from './components/HypeBar';
 
 function App() {
   const [stats, setStats] = useState({});
@@ -14,6 +15,7 @@ function App() {
   const [streamerInfo, setStreamerInfo] = useState(null);
   const [agentActivities, setAgentActivities] = useState([]);
   const [isLive, setIsLive] = useState(false);
+  const [hypeData, setHypeData] = useState(null);
 
   const API_URL = 'http://localhost:8082';
   const WS_URL = 'ws://localhost:8082/ws';
@@ -51,6 +53,11 @@ function App() {
       const activityData = await activityRes.json();
       setAgentActivities(activityData || []);
 
+      // Fetch initial hype meter
+      const hypeRes = await fetch(`${API_URL}/api/hype-meter`);
+      const hypeData = await hypeRes.json();
+      setHypeData(hypeData);
+
       setIsLive(true);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -83,6 +90,9 @@ function App() {
           // Add new activity to the top of the list
           setAgentActivities(prev => [data.activity, ...prev].slice(0, 50));
           console.log('📡 Received agent activity:', data.activity);
+        } else if (data.type === 'hype_meter') {
+          // Update hype meter in real-time
+          setHypeData(data.data);
         }
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
@@ -151,10 +161,17 @@ function App() {
       </header>
 
       <main className="dashboard-content">
-        {/* Stats Row */}
-        <section className="section-stats">
-          <Stats stats={stats} />
-        </section>
+        {/* Hype Bar - Left Side */}
+        <aside className="hype-bar-sidebar">
+          <HypeBar hypeData={hypeData} />
+        </aside>
+
+        {/* Main Content Area */}
+        <div className="main-content-wrapper">
+          {/* Stats Row */}
+          <section className="section-stats">
+            <Stats stats={stats} />
+          </section>
 
         {/* AI Insights - Main Feature (Large) */}
         <section className="section-insights-main">
@@ -178,6 +195,7 @@ function App() {
         <section className="section-agent-activity">
           <AgentActivityLog activities={agentActivities} />
         </section>
+        </div>
       </main>
     </div>
   );

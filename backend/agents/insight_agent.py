@@ -77,9 +77,9 @@ Be concise. Only include significant insights, not every little thing.
             Dict with insights
         """
 
-        if not messages or len(messages) < 10:
+        if not messages or len(messages) < 5:
             return {
-                "error": "Not enough messages to analyze (need at least 10)",
+                "error": "Not enough messages to analyze (need at least 5)",
                 "actionable_insights": []
             }
 
@@ -97,7 +97,7 @@ Provide insights in JSON format."""
 
         try:
             response = self.client.models.generate_content(
-                model='gemini-2.0-flash-exp',
+                model='gemini-2.5-flash',
                 contents=prompt,
                 config=self.agent_config
             )
