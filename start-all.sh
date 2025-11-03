@@ -102,6 +102,7 @@ sleep 2
 echo "💻 Starting Frontend Dashboard (Port 3000)..."
 cd frontend/dashboard
 # Prevent npm from auto-opening browser (we'll do it manually once)
+# npm start now uses dotenv-cli to load from config/.env automatically
 BROWSER=none npm start > ../../logs/frontend.log 2>&1 &
 FRONTEND_PID=$!
 echo "   Started with PID: $FRONTEND_PID"

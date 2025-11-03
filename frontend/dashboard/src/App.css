@@ -156,33 +156,8 @@ body {
   position: relative;
 }
 
-/* Hype Bar Sidebar - Left Side */
-.hype-bar-sidebar {
-  position: fixed;
-  left: 10px;
-  top: 80px;
-  z-index: 50;
-  width: 300px;
-  max-height: calc(100vh - 100px);
-  overflow-y: auto;
-}
-
-.hype-bar-sidebar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.hype-bar-sidebar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.hype-bar-sidebar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-}
-
-/* Main content area - with left margin for sidebar */
+/* Main content area */
 .main-content-wrapper {
-  margin-left: 320px;
   flex: 1;
   display: flex;
   flex-direction: column;

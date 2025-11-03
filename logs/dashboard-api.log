@@ -1,13 +1,18 @@
-2025/11/02 18:35:11 ✅ Connected to Firestore
-2025/11/02 18:35:11 ✅ WebSocket hub started
-2025/11/02 18:35:11 👂 Starting Firestore listener for agent activity...
-2025/11/02 18:35:11 🚀 Dashboard API starting on port 8082
-2025/11/02 18:35:11 🔥 Starting Hype Meter tracker...
-2025/11/02 18:35:12 📡 Broadcasted agent activity: TrendAgent - agent_complete
-2025/11/02 18:35:15 📡 Broadcasted agent activity: TrendAgent - agent_start
-2025/11/02 18:35:27 📡 Broadcasted agent activity: TrendAgent - agent_complete
-2025/11/02 18:35:36 ✅ New WebSocket client connected
-2025/11/02 18:35:36 WebSocket client connected. Total clients: 1
-2025/11/02 18:35:36 ✅ New WebSocket client connected
-2025/11/02 18:35:36 WebSocket client connected. Total clients: 2
-2025/11/02 18:35:36 WebSocket client disconnected. Total clients: 1
+2025/11/02 19:37:52 ✅ Connected to Firestore
+2025/11/02 19:37:52 ✅ WebSocket hub started
+2025/11/02 19:37:52 🚀 Dashboard API starting on port 8082
+2025/11/02 19:37:52 👂 Starting Firestore listener for agent activity...
+2025/11/02 19:37:52 📡 Broadcasted agent activity: TrendAgent - agent_complete
+2025/11/02 19:37:54 📡 Broadcasted agent activity: TrendAgent - agent_start
+2025/11/02 19:38:14 📡 Broadcasted agent activity: TrendAgent - agent_complete
+2025/11/02 19:38:21 ✅ Updated TWITCH_CHANNEL to: shroud
+2025/11/02 19:38:21 ✅ New WebSocket client connected
+2025/11/02 19:38:21 WebSocket client connected. Total clients: 1
+2025/11/02 19:40:15 WebSocket error: websocket: close 1005 (no status)
+2025/11/02 19:40:15 WebSocket client disconnected. Total clients: 0
+2025/11/02 19:40:18 ✅ New WebSocket client connected
+2025/11/02 19:40:18 WebSocket client connected. Total clients: 1
+2025/11/02 19:40:18 WebSocket client disconnected. Total clients: 0
+2025/11/02 19:40:18 ✅ New WebSocket client connected
+2025/11/02 19:40:18 WebSocket client connected. Total clients: 1
+2025/11/02 19:41:02 WebSocket client disconnected. Total clients: 0

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -8,6 +9,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -64,23 +67,6 @@ type AgentActivity struct {
 	Result       map[string]interface{} `json:"result,omitempty"`
 }
 
-type HypeMeter struct {
-	Score        float64   `json:"score"`         // 0-100
-	ViewerCount  int       `json:"viewer_count"`  // Estimated from message rate
-	MessageRate  float64   `json:"message_rate"`  // messages per 10 seconds
-	BaselineRate float64   `json:"baseline_rate"` // baseline messages per 10 seconds
-	Timestamp    time.Time `json:"timestamp"`
-}
-
-type Highlight struct {
-	ID           string    `json:"id"`
-	StartTime    time.Time `json:"start_time"`
-	EndTime      time.Time `json:"end_time"`
-	Duration     int       `json:"duration"`      // seconds
-	PeakHype     float64   `json:"peak_hype"`     // 0-100
-	MessageCount int       `json:"message_count"` // messages during highlight
-}
-
 // WebSocket types
 type Client struct {
 	hub  *Hub
@@ -105,21 +91,6 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-// Hype meter state
-type HypeTracker struct {
-	mu             sync.RWMutex
-	messageTimes   []time.Time // Sliding window of message timestamps
-	baselineEMA    float64     // Exponential moving average of message rate
-	lastUpdate     time.Time
-	currentHype    float64
-	highlightStart *time.Time
-}
-
-var hypeTracker = &HypeTracker{
-	messageTimes: make([]time.Time, 0, 1000),
-	baselineEMA:  10.0, // Initial baseline: 10 messages per 10 seconds
-}
-
 func main() {
 	// Load environment variables
 	godotenv.Load("../../config/.env")
@@ -141,7 +112,6 @@ func main() {
 	wsHub = newHub()
 	go wsHub.run()
 	go listenForAgentActivity(ctx)
-	go trackHypeMeter(ctx) // Start hype meter tracker
 	log.Println("✅ WebSocket hub started")
 
 	// Set up routes
@@ -152,16 +122,16 @@ func main() {
 	mux.HandleFunc("/api/insights/latest", getLatestInsights)
 	mux.HandleFunc("/api/streamer", getStreamerInfo)
 	mux.HandleFunc("/api/agent-activity", getAgentActivity)
-	mux.HandleFunc("/api/hype-meter", getHypeMeter)
-	mux.HandleFunc("/api/highlights", getHighlights)
+	mux.HandleFunc("/api/update-channel", updateChannel)
 	mux.HandleFunc("/ws", handleWebSocket)
 	mux.HandleFunc("/health", healthCheck)
 
 	// Enable CORS
 	handler := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:3000"},
-		AllowedMethods: []string{"GET", "POST", "OPTIONS"},
-		AllowedHeaders: []string{"*"},
+		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
+		AllowedHeaders:   []string{"*"},
+		AllowCredentials: true,
 	}).Handler(mux)
 
 	// Start server
@@ -201,9 +171,6 @@ func getRecentMessages(w http.ResponseWriter, r *http.Request) {
 		doc.DataTo(&msg)
 		msg.ID = doc.Ref.ID
 		messages = append(messages, msg)
-
-		// Add to hype tracker
-		addMessageToHypeTracker(msg.Timestamp)
 	}
 
 	// Prevent caching
@@ -606,248 +573,91 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	log.Println("✅ New WebSocket client connected")
 }
 
-// Track hype meter by monitoring message rate
-func trackHypeMeter(ctx context.Context) {
-	log.Println("🔥 Starting Hype Meter tracker...")
-	ticker := time.NewTicker(200 * time.Millisecond) // Update every 0.2s
-	defer ticker.Stop()
-
-	for {
-		select {
-		case <-ticker.C:
-			updateHypeMeter(ctx)
-		case <-ctx.Done():
-			return
-		}
-	}
-}
-
-func updateHypeMeter(ctx context.Context) {
-	hypeTracker.mu.Lock()
-	defer hypeTracker.mu.Unlock()
-
-	now := time.Now()
-	cutoff10s := now.Add(-10 * time.Second)
-	cutoff30s := now.Add(-30 * time.Second)
-	cutoff2min := now.Add(-2 * time.Minute)
-
-	// Clean old messages
-	filtered := make([]time.Time, 0, len(hypeTracker.messageTimes))
-	for _, t := range hypeTracker.messageTimes {
-		if t.After(cutoff2min) {
-			filtered = append(filtered, t)
-		}
-	}
-	hypeTracker.messageTimes = filtered
-
-	// Count messages in windows
-	count10s := 0
-	count30s := 0
-	for _, t := range filtered {
-		if t.After(cutoff10s) {
-			count10s++
-		}
-		if t.After(cutoff30s) {
-			count30s++
-		}
+func updateChannel(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
 	}
 
-	// Calculate current rate (messages per 10 seconds)
-	currentRate := float64(count10s)
-	mediumRate := float64(count30s) / 3.0 // Normalize to per 10 seconds
-
-	// Update baseline with exponential moving average (alpha = 0.1 for slow adaptation)
-	alpha := 0.1
-	hypeTracker.baselineEMA = alpha*mediumRate + (1-alpha)*hypeTracker.baselineEMA
-
-	// Ensure minimum baseline
-	if hypeTracker.baselineEMA < 1.0 {
-		hypeTracker.baselineEMA = 1.0
+	var req struct {
+		Channel string `json:"channel"`
 	}
 
-	// Calculate spike ratio
-	spikeRatio := currentRate / hypeTracker.baselineEMA
-
-	// Normalization for high viewership streams
-	normalizationFactor := 1.0
-	if hypeTracker.baselineEMA > 50.0 {
-		normalizationFactor = 50.0 / hypeTracker.baselineEMA
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
 	}
 
-	// Calculate raw hype score (0-100)
-	normalizedSpike := spikeRatio * normalizationFactor
-	rawScore := (normalizedSpike - 1.0) * 50.0
-
-	// Clamp score
-	if rawScore < 0 {
-		rawScore = 0
-	}
-	if rawScore > 100 {
-		rawScore = 100
+	if req.Channel == "" {
+		http.Error(w, "Channel is required", http.StatusBadRequest)
+		return
 	}
 
-	// Smooth with exponential moving average (faster rise, slower fall)
-	alphaRise := 0.3
-	alphaFall := 0.1
-	if rawScore > hypeTracker.currentHype {
-		hypeTracker.currentHype = alphaRise*rawScore + (1-alphaRise)*hypeTracker.currentHype
-	} else {
-		hypeTracker.currentHype = alphaFall*rawScore + (1-alphaFall)*hypeTracker.currentHype
+	// Validate channel name (alphanumeric and underscores only)
+	cleanChannel := strings.ToLower(strings.TrimSpace(req.Channel))
+	if len(cleanChannel) == 0 || len(cleanChannel) > 25 {
+		http.Error(w, "Invalid channel name", http.StatusBadRequest)
+		return
 	}
 
-	hypeTracker.lastUpdate = now
+	// Path to .env file (relative to project root)
+	envPath := filepath.Join("..", "..", "config", ".env")
 
-	// Check for highlight moments (hype > 70% for >30 seconds)
-	if hypeTracker.currentHype > 70.0 {
-		if hypeTracker.highlightStart == nil {
-			start := now
-			hypeTracker.highlightStart = &start
-		} else if now.Sub(*hypeTracker.highlightStart) > 30*time.Second {
-			// Save highlight
-			saveHighlight(ctx, *hypeTracker.highlightStart, now, hypeTracker.currentHype, count10s)
-			hypeTracker.highlightStart = nil
-		}
-	} else {
-		hypeTracker.highlightStart = nil
-	}
-
-	// Broadcast via WebSocket
-	hypeData := HypeMeter{
-		Score:        hypeTracker.currentHype,
-		ViewerCount:  estimateViewerCount(hypeTracker.baselineEMA),
-		MessageRate:  currentRate,
-		BaselineRate: hypeTracker.baselineEMA,
-		Timestamp:    now,
-	}
-
-	hypeJSON, err := json.Marshal(map[string]interface{}{
-		"type": "hype_meter",
-		"data": hypeData,
-	})
-	if err == nil {
-		wsHub.broadcast <- hypeJSON
-	}
-}
-
-func estimateViewerCount(baselineRate float64) int {
-	// Rough estimation: ~1 message per 100 viewers per 10 seconds
-	// Adjust based on your chat activity patterns
-	estimated := int(baselineRate * 100)
-	if estimated < 100 {
-		return 100
-	}
-	return estimated
-}
-
-func saveHighlight(ctx context.Context, startTime, endTime time.Time, peakHype float64, messageCount int) {
-	highlight := map[string]interface{}{
-		"start_time":    startTime,
-		"end_time":      endTime,
-		"duration":      int(endTime.Sub(startTime).Seconds()),
-		"peak_hype":     peakHype,
-		"message_count": messageCount,
-		"created_at":    time.Now(),
-	}
-
-	_, _, err := firestoreClient.Collection("highlights").Add(ctx, highlight)
+	// Read existing .env file
+	file, err := os.OpenFile(envPath, os.O_RDWR, 0644)
 	if err != nil {
-		log.Printf("⚠️  Error saving highlight: %v", err)
-	} else {
-		log.Printf("✨ Highlight saved: %.0f%% hype, %d messages, %ds duration", peakHype, messageCount, int(endTime.Sub(startTime).Seconds()))
+		log.Printf("Error opening .env file: %v", err)
+		http.Error(w, "Failed to update configuration", http.StatusInternalServerError)
+		return
 	}
-}
+	defer file.Close()
 
-// Add message timestamp to hype tracker
-func addMessageToHypeTracker(timestamp time.Time) {
-	hypeTracker.mu.Lock()
-	defer hypeTracker.mu.Unlock()
-	hypeTracker.messageTimes = append(hypeTracker.messageTimes, timestamp)
-	// Keep only last 2 minutes
-	if len(hypeTracker.messageTimes) > 1200 { // ~10 msg/sec max
-		hypeTracker.messageTimes = hypeTracker.messageTimes[len(hypeTracker.messageTimes)-1200:]
-	}
-}
+	// Read all lines
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	found := false
 
-func getHypeMeter(w http.ResponseWriter, r *http.Request) {
-	hypeTracker.mu.RLock()
-	currentHype := hypeTracker.currentHype
-	baseline := hypeTracker.baselineEMA
-	lastUpdate := hypeTracker.lastUpdate
-	hypeTracker.mu.RUnlock()
-
-	// Count recent messages
-	count10s := 0
-	cutoff10s := time.Now().Add(-10 * time.Second)
-	hypeTracker.mu.RLock()
-	for _, t := range hypeTracker.messageTimes {
-		if t.After(cutoff10s) {
-			count10s++
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, "TWITCH_CHANNEL=") {
+			lines = append(lines, fmt.Sprintf("TWITCH_CHANNEL=%s", cleanChannel))
+			found = true
+		} else {
+			lines = append(lines, line)
 		}
 	}
-	hypeTracker.mu.RUnlock()
 
-	hype := HypeMeter{
-		Score:        currentHype,
-		ViewerCount:  estimateViewerCount(baseline),
-		MessageRate:  float64(count10s),
-		BaselineRate: baseline,
-		Timestamp:    lastUpdate,
+	if err := scanner.Err(); err != nil {
+		log.Printf("Error reading .env file: %v", err)
+		http.Error(w, "Failed to read configuration", http.StatusInternalServerError)
+		return
 	}
+
+	// If TWITCH_CHANNEL wasn't found, add it
+	if !found {
+		lines = append(lines, fmt.Sprintf("TWITCH_CHANNEL=%s", cleanChannel))
+	}
+
+	// Write back to file
+	file.Truncate(0)
+	file.Seek(0, 0)
+	writer := bufio.NewWriter(file)
+	for _, line := range lines {
+		writer.WriteString(line + "\n")
+	}
+	writer.Flush()
+
+	// Update environment variable for current process
+	os.Setenv("TWITCH_CHANNEL", cleanChannel)
+
+	log.Printf("✅ Updated TWITCH_CHANNEL to: %s", cleanChannel)
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
-	json.NewEncoder(w).Encode(hype)
-}
-
-func getHighlights(w http.ResponseWriter, r *http.Request) {
-	ctx := context.Background()
-
-	// Get last 20 highlights
-	query := firestoreClient.Collection("highlights").
-		OrderBy("start_time", firestore.Desc).
-		Limit(20)
-
-	docs := query.Documents(ctx)
-	defer docs.Stop()
-
-	var highlights []Highlight
-	for {
-		doc, err := docs.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		data := doc.Data()
-		highlight := Highlight{
-			ID: doc.Ref.ID,
-		}
-
-		if st, ok := data["start_time"].(time.Time); ok {
-			highlight.StartTime = st
-		}
-		if et, ok := data["end_time"].(time.Time); ok {
-			highlight.EndTime = et
-		}
-		if d, ok := data["duration"].(int64); ok {
-			highlight.Duration = int(d)
-		}
-		if ph, ok := data["peak_hype"].(float64); ok {
-			highlight.PeakHype = ph
-		}
-		if mc, ok := data["message_count"].(int64); ok {
-			highlight.MessageCount = int(mc)
-		}
-
-		highlights = append(highlights, highlight)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
-	json.NewEncoder(w).Encode(highlights)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"success": true,
+		"channel": cleanChannel,
+		"message": "Channel updated successfully. Please restart chat-ingestion service for changes to take effect.",
+	})
 }
 
 func listenForAgentActivity(ctx context.Context) {
