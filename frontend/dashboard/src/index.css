@@ -1,10 +1,36 @@
+/* CSS Variables for Theme Support */
+:root[data-theme="dark"] {
+  --bg-primary: #0e0e10;
+  --bg-secondary: #18181b;
+  --bg-hover: #1f1f23;
+  --text-primary: #efeff1;
+  --text-secondary: #adadb8;
+  --border-color: #1f1f23;
+  --accent-color: #9147ff;
+  --accent-hover: #772ce8;
+}
+
+:root[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f7f8;
+  --bg-hover: #eaeaea;
+  --text-primary: #0e0e10;
+  --text-secondary: #5c5c5e;
+  --border-color: #e0e0e0;
+  --accent-color: #9147ff;
+  --accent-hover: #772ce8;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 code {

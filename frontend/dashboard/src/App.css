@@ -6,15 +6,30 @@
 
 body {
   font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
-  background: #0e0e10;
-  color: #efeff1;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .App {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Notion-style centered layout */
+.app-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 40px;
+}
+
+@media (max-width: 768px) {
+  .app-content {
+    padding: 0 24px;
+  }
 }
 
 /* Header - Twitch Style */
@@ -172,19 +187,21 @@ body {
 }
 
 .stat-card {
-  background: #18181b;
+  background: var(--bg-secondary);
   border-radius: 6px;
   padding: 16px;
-  border-left: 3px solid;
+  border-left: 4px solid;
+  border: 1px solid var(--accent-color);
+  box-shadow: 0 0 20px rgba(145, 71, 255, 0.2);
   display: flex;
   align-items: center;
   gap: 12px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 30px rgba(145, 71, 255, 0.3);
 }
 
 .stat-icon {
@@ -197,7 +214,7 @@ body {
 
 .stat-label {
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: var(--text-secondary);
   margin-bottom: 5px;
 }
 
@@ -215,52 +232,9 @@ body {
   min-height: 300px;
 }
 
-/* Content Grid - Two Columns */
-.content-grid {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 10px;
-  margin-bottom: 10px;
-  min-height: 500px;
-}
-
-.chat-section-wrapper {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  min-height: 0;
-}
-
-.priority-section-wrapper {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  min-height: 0;
-}
-
-@media (max-width: 1200px) {
-  .content-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: 500px 400px;
-  }
-}
-
-/* Priority Messages */
-.priority-messages {
-  background: #18181b;
-  border-radius: 6px;
-  padding: 16px;
-  height: 100%;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.priority-messages h2 {
-  margin-bottom: 12px;
-  color: #f7b731;
-  font-size: 1.1rem;
-  font-weight: 600;
+/* Recent Messages Section */
+.section-messages {
+  margin-bottom: 24px;
 }
 
 
@@ -350,22 +324,29 @@ body {
 
 /* Recent Messages - Twitch Chat Style */
 .recent-messages {
-  background: #18181b;
+  background: var(--bg-secondary);
   border-radius: 6px;
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  border: 1px solid var(--accent-color);
+  box-shadow: 0 0 20px rgba(145, 71, 255, 0.2);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.recent-messages:hover {
+  box-shadow: 0 0 30px rgba(145, 71, 255, 0.3);
 }
 
 .recent-messages h2 {
   padding: 12px 16px;
   margin: 0;
-  color: #efeff1;
+  color: var(--text-primary);
   font-size: 1rem;
   font-weight: 600;
-  border-bottom: 1px solid #1f1f23;
-  background: #0e0e10;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-primary);
 }
 
 .messages-scroll {
@@ -385,11 +366,47 @@ body {
   font-size: 0.8125rem;
   line-height: 1.5;
   border-radius: 2px;
-  transition: background 0.1s ease;
+  transition: background 0.1s ease, transform 0.3s ease, opacity 0.3s ease;
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .message-row:hover {
-  background: #1f1f23;
+  background: var(--bg-hover);
+}
+
+.message-row.message-new {
+  background: rgba(145, 71, 255, 0.1);
+  border-left: 2px solid #9147ff;
+  animation: messageHighlight 0.5s ease-out;
+}
+
+@keyframes messageHighlight {
+  0% {
+    background: rgba(145, 71, 255, 0.3);
+    transform: translateX(-5px);
+  }
+  100% {
+    background: rgba(145, 71, 255, 0.1);
+    transform: translateX(0);
+  }
+}
+
+.no-messages {
+  padding: 40px 20px;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.875rem;
 }
 
 .message-row.spam {
@@ -398,14 +415,14 @@ body {
 }
 
 .message-time {
-  color: #adadb8;
+  color: var(--text-secondary);
   font-size: 0.75rem;
   min-width: 60px;
   flex-shrink: 0;
 }
 
 .message-username {
-  color: #9147ff;
+  color: var(--accent-color);
   font-weight: 700;
   cursor: pointer;
   flex-shrink: 0;
@@ -417,7 +434,7 @@ body {
 
 .message-text {
   flex: 1;
-  color: #efeff1;
+  color: var(--text-primary);
   word-wrap: break-word;
 }
 
@@ -441,15 +458,20 @@ body {
 
 /* AI Insights - Twitch Style */
 .ai-insights {
-  background: #18181b;
+  background: var(--bg-secondary);
   border-radius: 6px;
   padding: 16px;
-  border: 1px solid #9147ff;
+  border: 1px solid var(--accent-color);
   box-shadow: 0 0 20px rgba(145, 71, 255, 0.2);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ai-insights:hover {
+  box-shadow: 0 0 30px rgba(145, 71, 255, 0.3);
 }
 
 .ai-insights h2 {
-  color: #9147ff;
+  color: var(--accent-color);
   margin-bottom: 16px;
   font-size: 1.2rem;
   font-weight: 600;
@@ -461,7 +483,7 @@ body {
 .no-insights {
   text-align: center;
   padding: 40px;
-  color: #94a3b8;
+  color: var(--text-secondary);
 }
 
 .no-insights .hint {
@@ -472,22 +494,29 @@ body {
 
 .insights-section {
   margin-bottom: 16px;
-  background: #1f1f23;
+  background: var(--bg-hover);
   border-radius: 4px;
   padding: 16px;
+  border: 1px solid var(--accent-color);
+  box-shadow: 0 0 15px rgba(145, 71, 255, 0.15);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.insights-section:hover {
+  box-shadow: 0 0 25px rgba(145, 71, 255, 0.25);
 }
 
 .insights-section h3 {
   font-size: 1rem;
   margin-bottom: 12px;
-  color: #efeff1;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 /* Actionable Insights */
 .insights-section.actionable {
   border-left: 3px solid #f7b731;
-  background: linear-gradient(to right, rgba(247, 183, 49, 0.1) 0%, #1f1f23 10%);
+  background: linear-gradient(to right, rgba(247, 183, 49, 0.1) 0%, var(--bg-hover) 10%);
 }
 
 .insight-list {
@@ -502,13 +531,15 @@ body {
   align-items: center;
   gap: 12px;
   padding: 10px;
-  background: #18181b;
+  background: var(--bg-secondary);
   border-radius: 4px;
   transition: background 0.2s ease;
+  cursor: pointer;
+  user-select: none;
 }
 
 .insight-item:hover {
-  background: #26262c;
+  background: var(--bg-hover);
 }
 
 .insight-item.priority {
@@ -530,9 +561,12 @@ body {
 }
 
 .sentiment-card {
-  background: #1e293b;
+  background: var(--bg-secondary);
   padding: 15px;
   border-radius: 6px;
+  border: 1px solid var(--accent-color);
+  box-shadow: 0 0 10px rgba(145, 71, 255, 0.1);
+  transition: background-color 0.3s ease;
 }
 
 .sentiment-main {
@@ -571,12 +605,12 @@ body {
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #94a3b8;
+  color: var(--text-secondary);
   font-size: 0.875rem;
 }
 
 .sentiment-reason {
-  color: #cbd5e1;
+  color: var(--text-primary);
   font-size: 0.875rem;
   line-height: 1.5;
 }
@@ -598,8 +632,11 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 12px;
-  background: #1e293b;
+  background: var(--bg-secondary);
   border-radius: 6px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  user-select: none;
 }
 
 .request-item.high {
@@ -670,9 +707,12 @@ body {
 
 .question-item {
   padding: 12px;
-  background: #1e293b;
+  background: var(--bg-secondary);
   border-radius: 6px;
   line-height: 1.5;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  user-select: none;
 }
 
 .question-item .username {
@@ -682,7 +722,7 @@ body {
 }
 
 .question-item .question {
-  color: #f1f5f9;
+  color: var(--text-primary);
 }
 
 /* Top Topics */
@@ -758,4 +798,14 @@ body {
 .section-agent-activity .agent-activity-log {
   max-width: 1400px;
   margin: 0 auto;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  padding: 16px;
+  border: 1px solid var(--accent-color);
+  box-shadow: 0 0 20px rgba(145, 71, 255, 0.2);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.section-agent-activity .agent-activity-log:hover {
+  box-shadow: 0 0 30px rgba(145, 71, 255, 0.3);
 }

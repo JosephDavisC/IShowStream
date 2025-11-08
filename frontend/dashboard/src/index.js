@@ -4,13 +4,19 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { ResolvedInsightsProvider } from './contexts/ResolvedInsightsContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <ResolvedInsightsProvider>
+          <App />
+        </ResolvedInsightsProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
 

@@ -157,7 +157,8 @@ func handleMessage(message twitch.PrivateMessage) {
 }
 
 func saveToFirestore(msg ChatMessage) {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
 
 	// Create collection reference
 	collection := firestoreClient.Collection("messages")
@@ -168,7 +169,7 @@ func saveToFirestore(msg ChatMessage) {
 		return
 	}
 
-	// Add document
+	// Add document with timeout to prevent blocking
 	_, _, err := collection.Add(ctx, msg)
 	if err != nil {
 		log.Printf("Error saving to Firestore: %v", err)

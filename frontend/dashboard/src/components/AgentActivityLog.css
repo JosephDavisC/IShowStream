@@ -1,9 +1,15 @@
 .agent-activity-log {
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--bg-secondary);
   border-radius: 12px;
   padding: 20px;
-  border: 1px solid rgba(138, 43, 226, 0.3);
+  border: 1px solid var(--accent-color);
+  box-shadow: 0 0 20px rgba(145, 71, 255, 0.2);
   backdrop-filter: blur(10px);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.agent-activity-log:hover {
+  box-shadow: 0 0 30px rgba(145, 71, 255, 0.3);
 }
 
 .activity-header {
@@ -24,7 +30,7 @@
 .activity-header h3 {
   margin: 0;
   font-size: 1.3rem;
-  color: #fff;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -44,7 +50,7 @@
 .activity-empty {
   text-align: center;
   padding: 40px 20px;
-  color: #999;
+  color: var(--text-secondary);
 }
 
 .activity-empty p {
@@ -54,7 +60,7 @@
 
 .activity-hint {
   font-size: 0.85rem;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .activity-list {
@@ -145,7 +151,7 @@
 
 .activity-timestamp {
   font-size: 0.75rem;
-  color: #888;
+  color: var(--text-secondary);
   font-family: 'Courier New', monospace;
   margin-bottom: 8px;
 }
@@ -174,7 +180,7 @@
 }
 
 .activity-title-text {
-  color: #fff;
+  color: var(--text-primary);
   font-size: 0.95rem;
 }
 
@@ -193,19 +199,19 @@
 }
 
 .detail-label {
-  color: #999;
+  color: var(--text-secondary);
   font-weight: 500;
   min-width: 80px;
 }
 
 .detail-value {
-  color: #ddd;
+  color: var(--text-primary);
   flex: 1;
 }
 
 .message-text {
   font-style: italic;
-  color: #b8b8b8;
+  color: var(--text-secondary);
 }
 
 .spam-type {

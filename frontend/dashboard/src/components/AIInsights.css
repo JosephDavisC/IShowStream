@@ -1,0 +1,244 @@
+/* AI Insights Animations */
+.ai-insights {
+  transition: all 0.3s ease;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.ai-insights.insights-enter {
+  animation: slideInFade 0.5s ease-out;
+}
+
+@keyframes slideInFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.insights-section {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Clickable items */
+.insight-item.clickable,
+.question-item.clickable,
+.request-item.clickable {
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.insight-item.clickable:hover,
+.question-item.clickable:hover,
+.request-item.clickable:hover {
+  background: var(--bg-hover) !important;
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(145, 71, 255, 0.2);
+}
+
+/* Timestamp styling */
+.timestamp {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-left: auto;
+  padding: 0 8px;
+  font-family: 'Courier New', monospace;
+}
+
+.insight-item .timestamp,
+.question-item .timestamp,
+.request-item .timestamp {
+  font-size: 0.7rem;
+}
+
+/* Resolve button */
+.resolve-btn {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  color: #10b981;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 0 8px;
+  cursor: pointer;
+  pointer-events: none; /* Don't block clicks on parent */
+  flex-shrink: 0;
+}
+
+.insight-item.clickable:hover .resolve-btn,
+.question-item.clickable:hover .resolve-btn,
+.request-item.clickable:hover .resolve-btn {
+  opacity: 1;
+}
+
+.resolve-btn:hover {
+  color: #059669;
+  transform: scale(1.2);
+}
+
+/* History Section */
+.insights-history {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 2px solid #26262c;
+}
+
+.insights-history h3 {
+  font-size: 1rem;
+  color: #9147ff;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.history-list {
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  border-left: 2px solid var(--border-color);
+  opacity: 0.7;
+  transition: opacity 0.2s ease, background-color 0.3s ease;
+  font-size: 0.875rem;
+}
+
+.history-item:hover {
+  opacity: 1;
+  background: var(--bg-hover);
+}
+
+.history-type {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.history-content {
+  flex: 1;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.history-time {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-family: 'Courier New', monospace;
+  white-space: nowrap;
+}
+
+/* Enhanced insight item layout */
+.insight-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.insight-item .text {
+  flex: 1;
+  pointer-events: none; /* Allow clicks to pass through to parent */
+}
+
+.insight-item .icon {
+  pointer-events: none; /* Allow clicks to pass through to parent */
+}
+
+.insight-item .timestamp {
+  pointer-events: none; /* Allow clicks to pass through to parent */
+}
+
+.question-item .username,
+.question-item .question {
+  pointer-events: none; /* Allow clicks to pass through to parent */
+}
+
+.request-item .request-text,
+.request-item .request-meta {
+  pointer-events: none; /* Allow clicks to pass through to parent */
+}
+
+/* Question item enhanced layout */
+.question-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.question-item .question {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Request item enhanced layout */
+.request-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.request-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.request-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Sentiment timestamp */
+.sentiment-main {
+  position: relative;
+}
+
+.sentiment-main .timestamp {
+  margin-left: auto;
+}
+
+/* Smooth transitions for hiding resolved items */
+.insight-item,
+.question-item,
+.request-item {
+  transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease;
+}
+
+.insight-item.hiding,
+.question-item.hiding,
+.request-item.hiding {
+  opacity: 0;
+  transform: translateX(-20px);
+  max-height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* Active insights container */
+.insights-active {
+  animation: fadeIn 0.4s ease-out;
+}
+

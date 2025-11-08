@@ -2,9 +2,13 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import './App.css';
+import Navbar from './components/Navbar';
+import Landing from './components/Landing';
 import Login from './components/Login';
 import StreamerSetup from './components/StreamerSetup';
 import Dashboard from './components/Dashboard';
+import Profile from './components/Profile';
+import History from './components/History';
 
 // Protected Route component
 function ProtectedRoute({ children }) {
@@ -93,7 +97,9 @@ function DashboardRoute({ children }) {
 function App() {
   return (
     <Router>
+      <Navbar />
       <Routes>
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route
           path="/setup"
@@ -111,7 +117,22 @@ function App() {
             </DashboardRoute>
           }
         />
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/history"
+          element={
+            <ProtectedRoute>
+              <History />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

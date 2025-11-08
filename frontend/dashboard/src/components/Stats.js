@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, Shield, AlertTriangle, MessageSquare } from 'lucide-react';
+import { Activity, MessageSquare } from 'lucide-react';
 
 function Stats({ stats }) {
   const statItems = [
@@ -14,18 +14,6 @@ function Stats({ stats }) {
       label: 'Messages/Min',
       value: (stats.messages_per_min || 0).toFixed(1),
       color: '#10b981'
-    },
-    {
-      icon: <AlertTriangle />,
-      label: 'High Priority',
-      value: stats.high_priority || 0,
-      color: '#f59e0b'
-    },
-    {
-      icon: <Shield />,
-      label: 'Spam Filtered',
-      value: stats.spam_filtered || 0,
-      color: '#ef4444'
     }
   ];
 

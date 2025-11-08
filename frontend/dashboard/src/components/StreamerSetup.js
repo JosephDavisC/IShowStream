@@ -50,7 +50,7 @@ function StreamerSetup() {
     <div className="setup-container">
       <div className="setup-card">
         <div className="setup-header">
-          <h1>Welcome to StreamSense</h1>
+          <h1>Welcome to IShowStream</h1>
           <p>Enter the Twitch channel you want to analyze</p>
         </div>
 

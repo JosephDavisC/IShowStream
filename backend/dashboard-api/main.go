@@ -112,6 +112,7 @@ func main() {
 	wsHub = newHub()
 	go wsHub.run()
 	go listenForAgentActivity(ctx)
+	go listenForNewMessages(ctx)
 	log.Println("✅ WebSocket hub started")
 
 	// Set up routes
@@ -573,6 +574,26 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	log.Println("✅ New WebSocket client connected")
 }
 
+func getInt(data map[string]interface{}, key string) int {
+	if val, ok := data[key].(int64); ok {
+		return int(val)
+	}
+	if val, ok := data[key].(int); ok {
+		return val
+	}
+	return 0
+}
+
+func getFloat64(data map[string]interface{}, key string) float64 {
+	if val, ok := data[key].(float64); ok {
+		return val
+	}
+	if val, ok := data[key].(int64); ok {
+		return float64(val)
+	}
+	return 0.0
+}
+
 func updateChannel(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -712,6 +733,100 @@ func listenForAgentActivity(ctx context.Context) {
 				if err == nil {
 					wsHub.broadcast <- activityJSON
 					log.Printf("📡 Broadcasted agent activity: %s - %s", activity.Agent, activity.ActivityType)
+				}
+			}
+		}
+	}
+}
+
+// Listen for new messages in real-time and broadcast via WebSocket
+func listenForNewMessages(ctx context.Context) {
+	log.Println("💬 Starting Firestore listener for new messages...")
+
+	// Track seen message IDs to avoid duplicates
+	seenIDs := make(map[string]bool)
+	initialized := false
+
+	// Listen for new messages ordered by timestamp
+	iter := firestoreClient.Collection("messages").
+		OrderBy("timestamp", firestore.Desc).
+		Limit(1).
+		Snapshots(ctx)
+
+	defer iter.Stop()
+
+	for {
+		snap, err := iter.Next()
+		if err != nil {
+			log.Printf("⚠️  Firestore message listener error: %v", err)
+			time.Sleep(2 * time.Second)
+			continue
+		}
+
+		// On first run, mark all existing docs as seen
+		if !initialized {
+			for _, change := range snap.Changes {
+				seenIDs[change.Doc.Ref.ID] = true
+			}
+			initialized = true
+			log.Println("💬 Message listener initialized, waiting for new messages...")
+			continue
+		}
+
+		// Process new documents
+		for _, change := range snap.Changes {
+			if change.Kind == firestore.DocumentAdded {
+				docID := change.Doc.Ref.ID
+
+				// Skip if we've already seen this message
+				if seenIDs[docID] {
+					continue
+				}
+				seenIDs[docID] = true
+
+				// Clean up old IDs (keep only last 1000)
+				if len(seenIDs) > 1000 {
+					// Remove oldest 500 (simple cleanup)
+					count := 0
+					for id := range seenIDs {
+						if count >= 500 {
+							break
+						}
+						delete(seenIDs, id)
+						count++
+					}
+				}
+
+				data := change.Doc.Data()
+				var msg Message
+
+				msg.ID = docID
+				msg.Username = getString(data, "username")
+				msg.Message = getString(data, "message")
+				msg.Channel = getString(data, "channel")
+
+				// Parse timestamp
+				if ts, ok := data["timestamp"].(time.Time); ok {
+					msg.Timestamp = ts
+				}
+
+				if isSub, ok := data["is_sub"].(bool); ok {
+					msg.IsSub = isSub
+				}
+				if isMod, ok := data["is_mod"].(bool); ok {
+					msg.IsMod = isMod
+				}
+				if analysis, ok := data["agent_analysis"].(map[string]interface{}); ok {
+					msg.AgentAnalysis = analysis
+				}
+
+				// Broadcast to all WebSocket clients
+				messageJSON, err := json.Marshal(map[string]interface{}{
+					"type":    "new_message",
+					"message": msg,
+				})
+				if err == nil {
+					wsHub.broadcast <- messageJSON
 				}
 			}
 		}

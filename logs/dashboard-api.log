@@ -1,18 +1,24 @@
-2025/11/02 19:37:52 ✅ Connected to Firestore
-2025/11/02 19:37:52 ✅ WebSocket hub started
-2025/11/02 19:37:52 🚀 Dashboard API starting on port 8082
-2025/11/02 19:37:52 👂 Starting Firestore listener for agent activity...
-2025/11/02 19:37:52 📡 Broadcasted agent activity: TrendAgent - agent_complete
-2025/11/02 19:37:54 📡 Broadcasted agent activity: TrendAgent - agent_start
-2025/11/02 19:38:14 📡 Broadcasted agent activity: TrendAgent - agent_complete
-2025/11/02 19:38:21 ✅ Updated TWITCH_CHANNEL to: shroud
-2025/11/02 19:38:21 ✅ New WebSocket client connected
-2025/11/02 19:38:21 WebSocket client connected. Total clients: 1
-2025/11/02 19:40:15 WebSocket error: websocket: close 1005 (no status)
-2025/11/02 19:40:15 WebSocket client disconnected. Total clients: 0
-2025/11/02 19:40:18 ✅ New WebSocket client connected
-2025/11/02 19:40:18 WebSocket client connected. Total clients: 1
-2025/11/02 19:40:18 WebSocket client disconnected. Total clients: 0
-2025/11/02 19:40:18 ✅ New WebSocket client connected
-2025/11/02 19:40:18 WebSocket client connected. Total clients: 1
-2025/11/02 19:41:02 WebSocket client disconnected. Total clients: 0
+2025/11/06 23:21:38 ✅ Connected to Firestore
+2025/11/06 23:21:38 ✅ WebSocket hub started
+2025/11/06 23:21:38 👂 Starting Firestore listener for agent activity...
+2025/11/06 23:21:38 🚀 Dashboard API starting on port 8082
+2025/11/06 23:21:38 💬 Starting Firestore listener for new messages...
+2025/11/06 23:21:39 💬 Message listener initialized, waiting for new messages...
+2025/11/06 23:21:39 📡 Broadcasted agent activity: TrendAgent - agent_complete
+2025/11/06 23:21:42 📡 Broadcasted agent activity: TrendAgent - agent_start
+2025/11/06 23:21:55 📡 Broadcasted agent activity: TrendAgent - agent_complete
+2025/11/06 23:22:18 ✅ New WebSocket client connected
+2025/11/06 23:22:18 WebSocket client connected. Total clients: 1
+2025/11/06 23:22:18 WebSocket client disconnected. Total clients: 0
+2025/11/06 23:22:18 ✅ New WebSocket client connected
+2025/11/06 23:22:18 WebSocket client connected. Total clients: 1
+2025/11/06 23:26:46 📡 Broadcasted agent activity: TrendAgent - agent_start
+2025/11/06 23:26:47 📡 Broadcasted agent activity: TrendAgent - agent_complete
+2025/11/06 23:31:48 📡 Broadcasted agent activity: TrendAgent - agent_start
+2025/11/06 23:31:48 📡 Broadcasted agent activity: TrendAgent - agent_complete
+2025/11/06 23:36:49 📡 Broadcasted agent activity: TrendAgent - agent_start
+2025/11/06 23:36:50 📡 Broadcasted agent activity: TrendAgent - agent_complete
+2025/11/06 23:37:30 WebSocket client disconnected. Total clients: 0
+2025/11/06 23:37:31 ✅ New WebSocket client connected
+2025/11/06 23:37:31 WebSocket client connected. Total clients: 1
+2025/11/06 23:37:41 WebSocket client disconnected. Total clients: 0

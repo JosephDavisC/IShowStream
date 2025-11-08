@@ -63,7 +63,7 @@ function Login() {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <h1>StreamSense</h1>
+          <h1>IShowStream</h1>
           <p>AI-Powered Chat Analytics</p>
         </div>
 
