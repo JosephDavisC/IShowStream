@@ -15,8 +15,55 @@ function Dashboard() {
   const [isLive, setIsLive] = useState(false);
   const { user } = useAuth();
 
-  const API_URL = 'http://localhost:8082';
-  const WS_URL = 'ws://localhost:8082/ws';
+  // Determine API URL - auto-detect for Cloud Run or use environment variable
+  const getApiUrl = () => {
+    // Check runtime config (injected by entrypoint.sh if available)
+    if (typeof window !== 'undefined' && window.__RUNTIME_CONFIG__?.REACT_APP_API_URL) {
+      const url = window.__RUNTIME_CONFIG__.REACT_APP_API_URL.trim();
+      if (url) return url;
+    }
+    // Check environment variable (set at build time)
+    if (process.env.REACT_APP_API_URL) {
+      return process.env.REACT_APP_API_URL;
+    }
+    // Auto-detect for Cloud Run - try to find dashboard-api service
+    if (typeof window !== 'undefined' && window.location.hostname.includes('.run.app')) {
+      const protocol = window.location.protocol;
+      const hostname = window.location.hostname;
+      // Try common Cloud Run pattern: ishowstream-xxx -> dashboard-api-xxx
+      const apiHostname = hostname.replace('ishowstream', 'dashboard-api');
+      console.log('🔍 Auto-detected API URL:', `${protocol}//${apiHostname}`);
+      return `${protocol}//${apiHostname}`;
+    }
+    // Fallback to localhost for development
+    return 'http://localhost:8082';
+  };
+
+  const getWsUrl = () => {
+    // Check runtime config
+    if (typeof window !== 'undefined' && window.__RUNTIME_CONFIG__?.REACT_APP_WS_URL) {
+      const url = window.__RUNTIME_CONFIG__.REACT_APP_WS_URL.trim();
+      if (url) return url;
+    }
+    // Check environment variable
+    if (process.env.REACT_APP_WS_URL) {
+      return process.env.REACT_APP_WS_URL;
+    }
+    // Construct from API URL
+    const apiUrl = getApiUrl();
+    if (apiUrl.startsWith('https')) {
+      return apiUrl.replace('https', 'wss') + '/ws';
+    }
+    return apiUrl.replace('http', 'ws') + '/ws';
+  };
+
+  const API_URL = getApiUrl();
+  const WS_URL = getWsUrl();
+  
+  // Log configuration for debugging
+  useEffect(() => {
+    console.log('🔧 Dashboard API Configuration:', { API_URL, WS_URL, hostname: window.location.hostname });
+  }, [API_URL, WS_URL]);
 
   // Fetch initial data from API
   const fetchData = async () => {

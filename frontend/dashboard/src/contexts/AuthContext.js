@@ -95,8 +95,30 @@ export const AuthProvider = ({ children }) => {
     if (!user) return { success: false, error: 'Not authenticated' };
     
     try {
+      // Determine API URL (same logic as Dashboard)
+      const getApiUrl = () => {
+        // Check runtime config (injected by entrypoint.sh if available)
+        if (typeof window !== 'undefined' && window.__RUNTIME_CONFIG__?.REACT_APP_API_URL) {
+          const url = window.__RUNTIME_CONFIG__.REACT_APP_API_URL.trim();
+          if (url) return url;
+        }
+        // Check environment variable (set at build time)
+        if (process.env.REACT_APP_API_URL) {
+          return process.env.REACT_APP_API_URL;
+        }
+        // Auto-detect for Cloud Run
+        if (typeof window !== 'undefined' && window.location.hostname.includes('.run.app')) {
+          const protocol = window.location.protocol;
+          const hostname = window.location.hostname.replace('ishowstream', 'dashboard-api');
+          return `${protocol}//${hostname}`;
+        }
+        // Fallback to localhost for development
+        return 'http://localhost:8082';
+      };
+      const API_URL = getApiUrl();
+      
       // Update backend .env via API first
-      const response = await fetch('http://localhost:8082/api/update-channel', {
+      const response = await fetch(`${API_URL}/api/update-channel`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
