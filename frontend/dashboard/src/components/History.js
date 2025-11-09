@@ -51,17 +51,8 @@ function History() {
     });
   };
 
-  if (loading) {
-    return (
-      <div className="history-page">
-        <div className="history-container">
-          <div className="loading-state">Loading history...</div>
-        </div>
-      </div>
-    );
-  }
-
   // Group resolved items by type for better organization
+  // MUST be before any conditional returns (React Hooks rules)
   const groupedResolved = useMemo(() => {
     const items = Array.isArray(resolvedItems) ? resolvedItems : [];
     console.log('📊 History: Grouping resolved items, total:', items.length);
@@ -71,6 +62,16 @@ function History() {
       request: items.filter(item => item.type === 'request')
     };
   }, [resolvedItems]);
+
+  if (loading) {
+    return (
+      <div className="history-page">
+        <div className="history-container">
+          <div className="loading-state">Loading history...</div>
+        </div>
+      </div>
+    );
+  }
 
   const hasResolvedItems = Array.isArray(resolvedItems) && resolvedItems.length > 0;
   const hasInsights = insights.length > 0;

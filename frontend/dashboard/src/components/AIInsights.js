@@ -12,7 +12,7 @@ function AIInsights({ insights }) {
   
   // Create a Set of resolved item IDs for quick lookup
   const resolvedItemIds = new Set(
-    (resolvedItems || []).map(item => `${item.type}-${item.itemId}`)
+    (resolvedItems || []).map(item => item.itemId)
   );
 
   // Helper function to format timestamp
