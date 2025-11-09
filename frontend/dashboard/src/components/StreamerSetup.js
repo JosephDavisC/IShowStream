@@ -76,9 +76,20 @@ function StreamerSetup() {
             <small className="form-hint">Enter the channel name without spaces or special characters</small>
           </div>
 
-          <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? 'Updating...' : 'Continue'}
-          </button>
+          <div className="setup-form-actions">
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? 'Updating...' : 'Continue'}
+            </button>
+            <a 
+              href="https://www.twitch.tv" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="btn-twitch"
+            >
+              <span className="twitch-icon">🎮</span>
+              Open Twitch
+            </a>
+          </div>
         </form>
 
         {userConfig?.twitchChannel && (

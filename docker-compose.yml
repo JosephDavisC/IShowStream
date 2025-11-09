@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend/dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_FIREBASE_API_KEY=${REACT_APP_FIREBASE_API_KEY}
+      - REACT_APP_FIREBASE_AUTH_DOMAIN=${REACT_APP_FIREBASE_AUTH_DOMAIN}
+      - REACT_APP_FIREBASE_PROJECT_ID=${REACT_APP_FIREBASE_PROJECT_ID}
+      - REACT_APP_FIREBASE_STORAGE_BUCKET=${REACT_APP_FIREBASE_STORAGE_BUCKET}
+      - REACT_APP_FIREBASE_MESSAGING_SENDER_ID=${REACT_APP_FIREBASE_MESSAGING_SENDER_ID}
+      - REACT_APP_FIREBASE_APP_ID=${REACT_APP_FIREBASE_APP_ID}
+    depends_on:
+      - dashboard-api
+
+  # Dashboard API
+  dashboard-api:
+    build:
+      context: ./backend/dashboard-api
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - TWITCH_CLIENT_ID=${TWITCH_CLIENT_ID}
+      - TWITCH_CLIENT_SECRET=${TWITCH_CLIENT_SECRET}
+      - TWITCH_CHANNEL=${TWITCH_CHANNEL}
+      - PORT=8082
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/config/service-account-key.json
+    volumes:
+      - ./config:/app/config:ro
+    depends_on:
+      - chat-ingestion
+
+  # Chat Ingestion
+  chat-ingestion:
+    build:
+      context: ./backend/chat-ingestion
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+      - TWITCH_CHANNEL=${TWITCH_CHANNEL}
+      - PORT=8080
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/config/service-account-key.json
+    volumes:
+      - ./config:/app/config:ro
+
+  # Agents
+  agents:
+    build:
+      context: ./backend/agents
+      dockerfile: Dockerfile
+    environment:
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/config/service-account-key.json
+    volumes:
+      - ./config:/app/config:ro
+      - ./logs:/app/logs
+    depends_on:
+      - chat-ingestion
+

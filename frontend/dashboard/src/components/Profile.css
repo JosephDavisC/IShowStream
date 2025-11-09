@@ -128,6 +128,12 @@
   opacity: 0.6;
 }
 
+/* Light mode placeholder - make it darker/black for better visibility */
+:root[data-theme="light"] .form-input::placeholder {
+  color: #000000;
+  opacity: 0.5;
+}
+
 .form-help {
   font-size: 0.875rem;
   color: var(--text-secondary);
@@ -154,6 +160,9 @@
 }
 
 .btn-save {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 12px 24px;
   background: #9147ff;
   color: white;
@@ -163,12 +172,14 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  align-self: flex-start;
+  min-height: 44px;
+  box-sizing: border-box;
 }
 
 .btn-save:hover:not(:disabled) {
   background: #772ce8;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(145, 71, 255, 0.3);
 }
 
 .btn-save:disabled {
@@ -398,6 +409,105 @@
   cursor: not-allowed;
 }
 
+/* Image Upload Area */
+.image-upload-area {
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--bg-secondary);
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-upload-area:hover {
+  border-color: var(--accent-color);
+  background: var(--bg-hover);
+}
+
+.image-upload-area.dragging {
+  border-color: var(--accent-color);
+  background: rgba(145, 71, 255, 0.1);
+  border-style: solid;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.upload-icon {
+  font-size: 3rem;
+  opacity: 0.7;
+}
+
+.upload-text {
+  font-size: 1rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.upload-hint {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* Image Preview Container */
+.image-preview-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-upload-area:hover .image-overlay {
+  opacity: 1;
+}
+
+.image-overlay .upload-icon {
+  font-size: 2rem;
+  color: white;
+}
+
+.image-overlay .upload-text {
+  color: white;
+  font-size: 0.875rem;
+}
+
 /* Photo Preview */
 .photo-preview {
   display: flex;
@@ -407,6 +517,37 @@
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 6px;
+}
+
+/* Twitch Button */
+.btn-twitch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #5c16c5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  text-align: center;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.btn-twitch:hover {
+  background: #4c1399;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(92, 22, 197, 0.4);
+}
+
+.twitch-icon {
+  font-size: 1.1rem;
 }
 
 .photo-preview label {
@@ -420,6 +561,31 @@
   display: flex;
   gap: 12px;
   margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.form-actions-horizontal {
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 12px;
+}
+
+.form-actions-horizontal .btn-save,
+.form-actions-horizontal .btn-twitch {
+  width: 160px;
+  min-width: 160px;
+  height: 44px;
+  padding: 12px 24px;
+}
+
+.form-actions-horizontal .btn-twitch {
+  background: #9147ff;
+}
+
+.form-actions-horizontal .btn-twitch:hover {
+  background: #772ce8;
+  box-shadow: 0 4px 12px rgba(145, 71, 255, 0.3);
 }
 
 .btn-cancel {

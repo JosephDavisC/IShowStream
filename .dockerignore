@@ -1,0 +1,14 @@
+node_modules
+.git
+.gitignore
+*.log
+.DS_Store
+venv/
+__pycache__
+*.pyc
+.env
+.env.local
+logs/
+*.test
+*.out
+

@@ -1,0 +1,9 @@
+*.log
+.git
+.gitignore
+README.md
+.DS_Store
+*.test
+*.out
+tools
+

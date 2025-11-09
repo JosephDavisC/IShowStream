@@ -29,8 +29,23 @@
 1. **TWITCH_CLIENT_ID & TWITCH_CLIENT_SECRET**
    - Go to [Twitch Developer Console](https://dev.twitch.tv/console/apps)
    - Create a new application
-   - Set OAuth Redirect URLs to `http://localhost`
+   - Set OAuth Redirect URLs to `http://localhost` (for local dev) or your production domain
    - Copy the Client ID and generate a Client Secret
+
+**Note for Google Cloud Run Deployment:**
+- These credentials are used server-side by the backend services to fetch Twitch API data
+- For Cloud Run deployment, set these as environment variables in your Cloud Run service configuration
+- **Shared vs User-Specific Credentials:**
+  - **Shared credentials (recommended)**: Use the same `TWITCH_CLIENT_ID` and `TWITCH_CLIENT_SECRET` for all users. This works well if:
+    - You're monitoring specific channels or providing a service for multiple users
+    - The app reads public chat data (which doesn't require user-specific authentication)
+    - You want simpler deployment and management
+  - **User-specific credentials**: Only needed if users need to authenticate with their own Twitch accounts to:
+    - Access private/subscriber-only chat
+    - Make changes to their own Twitch channel
+    - Use Twitch features that require OAuth user tokens
+  
+  For most use cases (chat analytics), **shared credentials are sufficient** and recommended for simplicity.
 
 ## Environment Variables Reference
 

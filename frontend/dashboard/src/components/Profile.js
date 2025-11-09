@@ -16,6 +16,8 @@ function Profile() {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [photoURL, setPhotoURL] = useState(user?.photoURL || '');
+  const [isDragging, setIsDragging] = useState(false);
+  const [imagePreview, setImagePreview] = useState(user?.photoURL || '');
 
   useEffect(() => {
     if (userConfig?.twitchChannel) {
@@ -27,8 +29,71 @@ function Profile() {
     if (user) {
       setDisplayName(user.displayName || '');
       setPhotoURL(user.photoURL || '');
+      setImagePreview(user.photoURL || '');
     }
   }, [user]);
+
+  // Handle file selection
+  const handleFileSelect = (file) => {
+    if (!file) return;
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image size must be less than 5MB');
+      return;
+    }
+
+    // Read file as data URL
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const dataURL = reader.result;
+      setPhotoURL(dataURL);
+      setImagePreview(dataURL);
+      setError('');
+    };
+    reader.onerror = () => {
+      setError('Error reading image file');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Handle drag and drop
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      handleFileSelect(files[0]);
+    }
+  };
+
+  // Handle file input change
+  const handleFileInputChange = (e) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      handleFileSelect(files[0]);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -95,6 +160,7 @@ function Profile() {
   const handleCancelEdit = () => {
     setDisplayName(user?.displayName || '');
     setPhotoURL(user?.photoURL || '');
+    setImagePreview(user?.photoURL || '');
     setIsEditingProfile(false);
     setError('');
   };
@@ -168,36 +234,48 @@ function Profile() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="photoURL">Profile Picture URL</label>
-                <input
-                  type="url"
-                  id="photoURL"
-                  value={photoURL}
-                  onChange={(e) => setPhotoURL(e.target.value)}
-                  placeholder="https://example.com/your-photo.jpg"
-                  className="form-input-full"
-                  disabled={loading}
-                />
-                <p className="form-help">Enter a URL to an image for your profile picture</p>
-              </div>
-
-              {photoURL && (
-                <div className="photo-preview">
-                  <label>Preview:</label>
-                  <img
-                    src={photoURL}
-                    alt="Preview"
-                    className="profile-avatar"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'block';
-                    }}
+                <label htmlFor="profilePicture">Profile Picture</label>
+                
+                {/* Drag and Drop Area */}
+                <div
+                  className={`image-upload-area ${isDragging ? 'dragging' : ''}`}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={() => document.getElementById('fileInput').click()}
+                >
+                  <input
+                    type="file"
+                    id="fileInput"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={handleFileInputChange}
+                    disabled={loading}
                   />
-                  <span style={{ display: 'none', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
-                    Invalid image URL
-                  </span>
+                  {imagePreview ? (
+                    <div className="image-preview-container">
+                      <img
+                        src={imagePreview}
+                        alt="Profile preview"
+                        className="image-preview"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                      <div className="image-overlay">
+                        <span className="upload-icon">📷</span>
+                        <span className="upload-text">Click or drag to change</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="upload-placeholder">
+                      <span className="upload-icon">📷</span>
+                      <span className="upload-text">Drag & drop an image here or click to browse</span>
+                      <span className="upload-hint">Supports JPG, PNG, GIF (max 5MB)</span>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
 
               {error && <div className="alert alert-error">❌ {error}</div>}
               {success && <div className="alert alert-success">✅ {success}</div>}
@@ -309,13 +387,24 @@ function Profile() {
             {error && <div className="alert alert-error">❌ {error}</div>}
             {success && <div className="alert alert-success">✅ {success}</div>}
 
-            <button
-              type="submit"
-              className="btn-save"
-              disabled={loading}
-            >
-              {loading ? 'Saving...' : 'Save Changes'}
-            </button>
+            <div className="form-actions form-actions-horizontal">
+              <button
+                type="submit"
+                className="btn-save"
+                disabled={loading}
+              >
+                {loading ? 'Saving...' : 'Save Changes'}
+              </button>
+              <a 
+                href="https://www.twitch.tv" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="btn-twitch"
+              >
+                <span className="twitch-icon">🎮</span>
+                Open Twitch
+              </a>
+            </div>
           </form>
         </div>
 

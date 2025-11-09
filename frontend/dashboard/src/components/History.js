@@ -105,7 +105,10 @@ function History() {
         {/* Resolved Items Section */}
         {hasResolvedItems && (
           <div className="resolved-section">
-            <h2 className="resolved-section-title">✅ Resolved Items ({resolvedItems.length})</h2>
+            <div className="resolved-section-header">
+              <span className="resolved-section-icon">✅</span>
+              <h2 className="resolved-section-title">Resolved Items ({resolvedItems.length})</h2>
+            </div>
             
             {groupedResolved.actionable.length > 0 && (
               <div className="history-category-card">

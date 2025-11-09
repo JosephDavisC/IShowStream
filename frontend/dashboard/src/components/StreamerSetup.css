@@ -63,23 +63,23 @@
 .input-wrapper {
   display: flex;
   align-items: center;
-  background: #1f1f23;
-  border: 1px solid #26262c;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   overflow: hidden;
   transition: border-color 0.2s;
 }
 
 .input-wrapper:focus-within {
-  border-color: #9147ff;
+  border-color: var(--accent-color);
 }
 
 .input-prefix {
   padding: 12px 8px 12px 16px;
-  color: #adadb8;
+  color: var(--text-secondary);
   font-size: 0.9375rem;
-  background: #18181b;
-  border-right: 1px solid #26262c;
+  background: var(--bg-hover);
+  border-right: 1px solid var(--border-color);
 }
 
 .form-group input {
@@ -87,13 +87,20 @@
   padding: 12px 16px;
   background: transparent;
   border: none;
-  color: #efeff1;
+  color: var(--text-primary);
   font-size: 0.9375rem;
   outline: none;
 }
 
 .form-group input::placeholder {
-  color: #adadb8;
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+/* Light mode placeholder - make it darker/black for better visibility */
+:root[data-theme="light"] .form-group input::placeholder {
+  color: #000000;
+  opacity: 0.5;
 }
 
 .form-group input:disabled {
@@ -106,6 +113,12 @@
   color: #adadb8;
   font-size: 0.75rem;
   margin-top: 6px;
+}
+
+.setup-form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .btn-primary {
@@ -128,6 +141,35 @@
 .btn-primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.btn-twitch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  background: #9147ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  text-align: center;
+}
+
+.btn-twitch:hover {
+  background: #7c3aed;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(145, 71, 255, 0.3);
+}
+
+.twitch-icon {
+  font-size: 1.1rem;
 }
 
 .current-channel {

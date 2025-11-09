@@ -2,41 +2,17 @@
 > dashboard@0.1.0 start
 > npx dotenv-cli -e ../../config/.env -- react-scripts start
 
-(node:80266) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:45490) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
 (Use `node --trace-deprecation ...` to show where the warning was created)
-(node:80266) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:45490) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:45490) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 Starting the development server...
 
-Failed to compile.
-
-[eslint] 
-src/components/History.js
-  Line 65:27:  React Hook "useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/components/AIInsights.js
-  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
-
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
-ERROR in [eslint] 
-src/components/History.js
-  Line 65:27:  React Hook "useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
 Compiled with warnings.
 
 [eslint] 
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
-
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -44,9 +20,6 @@ To ignore, add // eslint-disable-next-line to the line before.
 WARNING in [eslint] 
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
-
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
 
 webpack compiled with 1 warning
 Compiling...
@@ -56,18 +29,12 @@ Compiled with warnings.
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
 
 WARNING in [eslint] 
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
-
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
 
 webpack compiled with 1 warning
 Compiling...
@@ -77,18 +44,12 @@ Compiled with warnings.
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
 
 WARNING in [eslint] 
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
-
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
 
 webpack compiled with 1 warning
 Compiling...
@@ -98,18 +59,12 @@ Compiled with warnings.
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
 
 WARNING in [eslint] 
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
-
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
 
 webpack compiled with 1 warning
 Compiling...
@@ -119,18 +74,12 @@ Compiled with warnings.
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
 
 WARNING in [eslint] 
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
-
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
 
 webpack compiled with 1 warning
 Compiling...
@@ -140,18 +89,12 @@ Compiled with warnings.
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
 
 WARNING in [eslint] 
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
-
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
 
 webpack compiled with 1 warning
 Compiling...
@@ -161,18 +104,12 @@ Compiled with warnings.
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
 
 WARNING in [eslint] 
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
-
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
 
 webpack compiled with 1 warning
 Compiling...
@@ -182,20 +119,41 @@ Compiled with warnings.
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
 src/components/Profile.js
-  Line 3:10:   'updateProfile' is defined but never used                 no-unused-vars
-  Line 4:10:   'doc' is defined but never used                           no-unused-vars
-  Line 4:15:   'updateDoc' is defined but never used                     no-unused-vars
-  Line 5:10:   'db' is defined but never used                            no-unused-vars
-  Line 16:10:  'isEditingProfile' is assigned a value but never used     no-unused-vars
-  Line 16:28:  'setIsEditingProfile' is assigned a value but never used  no-unused-vars
-  Line 17:10:  'displayName' is assigned a value but never used          no-unused-vars
-  Line 17:23:  'setDisplayName' is assigned a value but never used       no-unused-vars
-  Line 18:10:  'photoURL' is assigned a value but never used             no-unused-vars
-  Line 18:20:  'setPhotoURL' is assigned a value but never used          no-unused-vars
+  Line 19:10:  'isDragging' is assigned a value but never used       no-unused-vars
+  Line 19:22:  'setIsDragging' is assigned a value but never used    no-unused-vars
+  Line 20:10:  'imagePreview' is assigned a value but never used     no-unused-vars
+  Line 20:24:  'setImagePreview' is assigned a value but never used  no-unused-vars
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -204,20 +162,11 @@ WARNING in [eslint]
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
 src/components/Profile.js
-  Line 3:10:   'updateProfile' is defined but never used                 no-unused-vars
-  Line 4:10:   'doc' is defined but never used                           no-unused-vars
-  Line 4:15:   'updateDoc' is defined but never used                     no-unused-vars
-  Line 5:10:   'db' is defined but never used                            no-unused-vars
-  Line 16:10:  'isEditingProfile' is assigned a value but never used     no-unused-vars
-  Line 16:28:  'setIsEditingProfile' is assigned a value but never used  no-unused-vars
-  Line 17:10:  'displayName' is assigned a value but never used          no-unused-vars
-  Line 17:23:  'setDisplayName' is assigned a value but never used       no-unused-vars
-  Line 18:10:  'photoURL' is assigned a value but never used             no-unused-vars
-  Line 18:20:  'setPhotoURL' is assigned a value but never used          no-unused-vars
+  Line 19:10:  'isDragging' is assigned a value but never used       no-unused-vars
+  Line 19:22:  'setIsDragging' is assigned a value but never used    no-unused-vars
+  Line 20:10:  'imagePreview' is assigned a value but never used     no-unused-vars
+  Line 20:24:  'setImagePreview' is assigned a value but never used  no-unused-vars
 
 webpack compiled with 1 warning
 Compiling...
@@ -227,18 +176,13 @@ Compiled with warnings.
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
 src/components/Profile.js
-  Line 3:10:   'updateProfile' is defined but never used                 no-unused-vars
-  Line 4:10:   'doc' is defined but never used                           no-unused-vars
-  Line 4:15:   'updateDoc' is defined but never used                     no-unused-vars
-  Line 5:10:   'db' is defined but never used                            no-unused-vars
-  Line 16:10:  'isEditingProfile' is assigned a value but never used     no-unused-vars
-  Line 16:28:  'setIsEditingProfile' is assigned a value but never used  no-unused-vars
-  Line 17:10:  'displayName' is assigned a value but never used          no-unused-vars
-  Line 18:10:  'photoURL' is assigned a value but never used             no-unused-vars
+  Line 19:10:  'isDragging' is assigned a value but never used             no-unused-vars
+  Line 20:10:  'imagePreview' is assigned a value but never used           no-unused-vars
+  Line 67:9:   'handleDragOver' is assigned a value but never used         no-unused-vars
+  Line 73:9:   'handleDragLeave' is assigned a value but never used        no-unused-vars
+  Line 79:9:   'handleDrop' is assigned a value but never used             no-unused-vars
+  Line 91:9:   'handleFileInputChange' is assigned a value but never used  no-unused-vars
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -247,18 +191,13 @@ WARNING in [eslint]
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
 src/components/Profile.js
-  Line 3:10:   'updateProfile' is defined but never used                 no-unused-vars
-  Line 4:10:   'doc' is defined but never used                           no-unused-vars
-  Line 4:15:   'updateDoc' is defined but never used                     no-unused-vars
-  Line 5:10:   'db' is defined but never used                            no-unused-vars
-  Line 16:10:  'isEditingProfile' is assigned a value but never used     no-unused-vars
-  Line 16:28:  'setIsEditingProfile' is assigned a value but never used  no-unused-vars
-  Line 17:10:  'displayName' is assigned a value but never used          no-unused-vars
-  Line 18:10:  'photoURL' is assigned a value but never used             no-unused-vars
+  Line 19:10:  'isDragging' is assigned a value but never used             no-unused-vars
+  Line 20:10:  'imagePreview' is assigned a value but never used           no-unused-vars
+  Line 67:9:   'handleDragOver' is assigned a value but never used         no-unused-vars
+  Line 73:9:   'handleDragLeave' is assigned a value but never used        no-unused-vars
+  Line 79:9:   'handleDrop' is assigned a value but never used             no-unused-vars
+  Line 91:9:   'handleFileInputChange' is assigned a value but never used  no-unused-vars
 
 webpack compiled with 1 warning
 Compiling...
@@ -268,14 +207,6 @@ Compiled with warnings.
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
-src/components/Profile.js
-  Line 16:10:  'isEditingProfile' is assigned a value but never used     no-unused-vars
-  Line 63:9:   'handleUpdateProfile' is assigned a value but never used  no-unused-vars
-  Line 95:9:   'handleCancelEdit' is assigned a value but never used     no-unused-vars
-
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
 
@@ -283,175 +214,7 @@ WARNING in [eslint]
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
-src/components/Profile.js
-  Line 16:10:  'isEditingProfile' is assigned a value but never used     no-unused-vars
-  Line 63:9:   'handleUpdateProfile' is assigned a value but never used  no-unused-vars
-  Line 95:9:   'handleCancelEdit' is assigned a value but never used     no-unused-vars
-
 webpack compiled with 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/components/Profile.js
-Syntax error: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (283:8) (283:8)
-WARNING in [eslint] 
-src/components/AIInsights.js
-  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
-
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
-ERROR in ./src/components/Profile.js
-Module build failed (from ./node_modules/babel-loader/lib/index.js):
-SyntaxError: /Users/JosephWork/Desktop/streamsense/frontend/dashboard/src/components/Profile.js: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (283:8)
-
-  281 |             </div>
-  282 |           </div>
-> 283 |         </div>
-      |         ^
-  284 |
-  285 |         {/* Stream Settings Section */}
-  286 |         <div className="profile-section">
-    at constructor (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:367:19)
-    at FlowParserMixin.raise (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:6624:19)
-    at FlowParserMixin.jsxParseElementAt (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4771:18)
-    at FlowParserMixin.jsxParseElement (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4778:17)
-    at FlowParserMixin.parseExprAtom (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4788:19)
-    at FlowParserMixin.parseExprSubscripts (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11145:23)
-    at FlowParserMixin.parseUpdate (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11130:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11110:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10963:61)
-    at FlowParserMixin.parseExprOps (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10968:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10945:23)
-    at FlowParserMixin.parseMaybeAssign (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10895:21)
-    at /Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3527:39
-    at FlowParserMixin.tryParse (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:6932:20)
-    at FlowParserMixin.parseMaybeAssign (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3527:18)
-    at /Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10864:39
-    at FlowParserMixin.allowInAnd (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:12500:12)
-    at FlowParserMixin.parseMaybeAssignAllowIn (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10864:17)
-    at FlowParserMixin.parseMaybeAssignAllowInOrVoidPattern (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:12567:17)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11747:28)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3620:18)
-    at FlowParserMixin.parseExprAtom (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11395:23)
-    at FlowParserMixin.parseExprAtom (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4793:20)
-    at FlowParserMixin.parseExprSubscripts (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11145:23)
-    at FlowParserMixin.parseUpdate (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11130:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11110:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10963:61)
-    at FlowParserMixin.parseExprOps (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10968:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10945:23)
-    at FlowParserMixin.parseMaybeAssign (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10895:21)
-    at FlowParserMixin.parseMaybeAssign (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3578:18)
-    at /Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3045:77
-    at FlowParserMixin.forwardNoArrowParamsConversionAt (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3095:16)
-    at FlowParserMixin.parseConditional (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3045:27)
-    at FlowParserMixin.parseMaybeConditional (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10949:17)
-    at FlowParserMixin.parseMaybeAssign (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10895:21)
-    at FlowParserMixin.parseMaybeAssign (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3578:18)
-    at FlowParserMixin.parseExpressionBase (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10848:23)
-    at /Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10844:39
-    at FlowParserMixin.allowInAnd (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:12500:12)
-    at FlowParserMixin.parseExpression (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10844:17)
-    at FlowParserMixin.jsxParseExpressionContainer (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4661:31)
-    at FlowParserMixin.jsxParseElementAt (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4740:36)
-    at FlowParserMixin.jsxParseElementAt (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4727:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4727:32)
-    at FlowParserMixin.jsxParseElement (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4778:17)
-    at FlowParserMixin.parseExprAtom (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4788:19)
-    at FlowParserMixin.parseExprSubscripts (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11145:23)
-    at FlowParserMixin.parseUpdate (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11130:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11110:23)
-
-ERROR in [eslint] 
-src/components/Profile.js
-  Line 283:8:  Parsing error: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (283:8)
-
-webpack compiled with 2 errors and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/components/Profile.js
-Syntax error: Unexpected token, expected "," (285:8) (285:8)
-WARNING in [eslint] 
-src/components/AIInsights.js
-  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
-
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
-
-ERROR in ./src/components/Profile.js
-Module build failed (from ./node_modules/babel-loader/lib/index.js):
-SyntaxError: /Users/JosephWork/Desktop/streamsense/frontend/dashboard/src/components/Profile.js: Unexpected token, expected "," (285:8)
-
-  283 |         </div>
-  284 |
-> 285 |         {/* Stream Settings Section */}
-      |         ^
-  286 |         <div className="profile-section">
-  287 |           <h2 className="section-header">📺 Stream Settings</h2>
-  288 |           <form onSubmit={handleSubmit} className="profile-form">
-    at constructor (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:367:19)
-    at FlowParserMixin.raise (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:6624:19)
-    at FlowParserMixin.unexpected (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:6644:16)
-    at FlowParserMixin.expect (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:6924:12)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11733:14)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3620:18)
-    at FlowParserMixin.parseExprAtom (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11395:23)
-    at FlowParserMixin.parseExprAtom (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4793:20)
-    at FlowParserMixin.parseExprSubscripts (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11145:23)
-    at FlowParserMixin.parseUpdate (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11130:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11110:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10963:61)
-    at FlowParserMixin.parseExprOps (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10968:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10945:23)
-    at FlowParserMixin.parseMaybeAssign (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10895:21)
-    at FlowParserMixin.parseMaybeAssign (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3578:18)
-    at /Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3045:77
-    at FlowParserMixin.forwardNoArrowParamsConversionAt (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3095:16)
-    at FlowParserMixin.parseConditional (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3045:27)
-    at FlowParserMixin.parseMaybeConditional (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10949:17)
-    at FlowParserMixin.parseMaybeAssign (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10895:21)
-    at FlowParserMixin.parseMaybeAssign (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3578:18)
-    at FlowParserMixin.parseExpressionBase (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10848:23)
-    at /Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10844:39
-    at FlowParserMixin.allowInAnd (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:12500:12)
-    at FlowParserMixin.parseExpression (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10844:17)
-    at FlowParserMixin.jsxParseExpressionContainer (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4661:31)
-    at FlowParserMixin.jsxParseElementAt (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4740:36)
-    at FlowParserMixin.jsxParseElementAt (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4727:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4727:32)
-    at FlowParserMixin.jsxParseElement (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4778:17)
-    at FlowParserMixin.parseExprAtom (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4788:19)
-    at FlowParserMixin.parseExprSubscripts (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11145:23)
-    at FlowParserMixin.parseUpdate (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11130:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11110:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10963:61)
-    at FlowParserMixin.parseExprOps (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10968:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10945:23)
-    at FlowParserMixin.parseMaybeAssign (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10895:21)
-    at /Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3527:39
-    at FlowParserMixin.tryParse (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:6932:20)
-    at FlowParserMixin.parseMaybeAssign (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3527:18)
-    at /Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10864:39
-    at FlowParserMixin.allowInAnd (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:12500:12)
-    at FlowParserMixin.parseMaybeAssignAllowIn (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:10864:17)
-    at FlowParserMixin.parseMaybeAssignAllowInOrVoidPattern (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:12567:17)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11747:28)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:3620:18)
-    at FlowParserMixin.parseExprAtom (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:11395:23)
-    at FlowParserMixin.parseExprAtom (/Users/JosephWork/Desktop/streamsense/frontend/dashboard/node_modules/@babel/parser/lib/index.js:4793:20)
-
-ERROR in [eslint] 
-src/components/Profile.js
-  Line 285:8:  Parsing error: Unexpected token, expected "," (285:8)
-
-webpack compiled with 2 errors and 1 warning
 Compiling...
 Compiled with warnings.
 
@@ -459,8 +222,20 @@ Compiled with warnings.
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -469,8 +244,814 @@ WARNING in [eslint]
 src/components/AIInsights.js
   Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
-src/components/Dashboard.js
-  Line 16:11:  'user' is assigned a value but never used  no-unused-vars
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
 
 webpack compiled with 1 warning
-The build failed because the process exited too early. This probably means the system ran out of memory or someone called `kill -9` on the process.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AIInsights.js
+  Line 106:6:  React Hook useEffect has a missing dependency: 'activeInsights'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setLocalHistory' needs the current value of 'activeInsights'  react-hooks/exhaustive-deps
+
+src/components/Landing.js
+  Line 28:19:  The ref value 'sectionsRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionsRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
