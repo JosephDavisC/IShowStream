@@ -26,25 +26,39 @@
   font-size: 6rem;
   font-weight: 800;
   margin-bottom: 24px;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 20%, #b91c1c 40%, #991b1b 60%, #7c3aed 80%, #9147ff 100%);
-  background-size: 200% 200%;
+  background: linear-gradient(
+    90deg,
+    #9147ff 0%,
+    #c084fc 16.66%,
+    #ec4899 33.33%,
+    #f43f5e 50%,
+    #fb923c 66.66%,
+    #ef4444 83.33%,
+    #9147ff 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: transparent;
   line-height: 1.1;
   letter-spacing: -2px;
-  animation: gradientFlow 4s ease-in-out infinite;
+  display: inline-block;
+  animation: gradientFlow 2s linear infinite, fadeInUp 0.8s ease-out 0.1s;
+  will-change: background-position;
+}
+
+.landing-title.reveal-on-load {
+  animation: gradientFlow 2s linear infinite, fadeInUp 0.8s ease-out 0.1s;
+  will-change: background-position;
 }
 
 @keyframes gradientFlow {
   0% {
     background-position: 0% 50%;
   }
-  50% {
-    background-position: 100% 50%;
-  }
   100% {
-    background-position: 0% 50%;
+    background-position: 200% 50%;
   }
 }
 

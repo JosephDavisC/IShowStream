@@ -1,81 +1,29 @@
-2025/11/08 21:26:48 ✅ Connected to Firestore
-2025/11/08 21:26:48 ✅ WebSocket hub started
-2025/11/08 21:26:48 👂 Starting Firestore listener for agent activity...
-2025/11/08 21:26:48 🚀 Dashboard API starting on port 8082
-2025/11/08 21:26:48 💬 Starting Firestore listener for new messages...
-2025/11/08 21:26:48 📡 Broadcasted agent activity: TrendAgent - agent_complete
-2025/11/08 21:26:48 💬 Message listener initialized, waiting for new messages...
-2025/11/08 21:26:51 📡 Broadcasted agent activity: TrendAgent - agent_start
-2025/11/08 21:27:01 📡 Broadcasted agent activity: TrendAgent - agent_complete
-2025/11/08 21:27:28 ✅ New WebSocket client connected
-2025/11/08 21:27:28 WebSocket client connected. Total clients: 1
-2025/11/08 21:27:31 WebSocket error: websocket: close 1005 (no status)
-2025/11/08 21:27:31 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:27:34 ✅ New WebSocket client connected
-2025/11/08 21:27:34 WebSocket client connected. Total clients: 1
-2025/11/08 21:27:38 WebSocket error: websocket: close 1005 (no status)
-2025/11/08 21:27:38 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:28:35 ✅ New WebSocket client connected
-2025/11/08 21:28:35 WebSocket client connected. Total clients: 1
-2025/11/08 21:28:35 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:28:35 ✅ New WebSocket client connected
-2025/11/08 21:28:35 WebSocket client connected. Total clients: 1
-2025/11/08 21:28:47 WebSocket error: websocket: close 1005 (no status)
-2025/11/08 21:28:47 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:29:19 ✅ New WebSocket client connected
-2025/11/08 21:29:19 WebSocket client connected. Total clients: 1
-2025/11/08 21:30:08 WebSocket error: websocket: close 1005 (no status)
-2025/11/08 21:30:08 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:32:15 📡 Broadcasted agent activity: TrendAgent - agent_start
-2025/11/08 21:32:19 ✅ New WebSocket client connected
-2025/11/08 21:32:19 WebSocket client connected. Total clients: 1
-2025/11/08 21:32:23 📡 Broadcasted agent activity: TrendAgent - agent_complete
-2025/11/08 21:32:35 WebSocket error: websocket: close 1005 (no status)
-2025/11/08 21:32:35 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:32:51 ✅ New WebSocket client connected
-2025/11/08 21:32:51 WebSocket client connected. Total clients: 1
-2025/11/08 21:32:57 WebSocket error: websocket: close 1005 (no status)
-2025/11/08 21:32:57 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:33:05 ✅ New WebSocket client connected
-2025/11/08 21:33:05 WebSocket client connected. Total clients: 1
-2025/11/08 21:33:05 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:33:05 ✅ New WebSocket client connected
-2025/11/08 21:33:05 WebSocket client connected. Total clients: 1
-2025/11/08 21:33:07 WebSocket error: websocket: close 1005 (no status)
-2025/11/08 21:33:07 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:33:15 ✅ New WebSocket client connected
-2025/11/08 21:33:15 WebSocket client connected. Total clients: 1
-2025/11/08 21:33:19 WebSocket error: websocket: close 1005 (no status)
-2025/11/08 21:33:19 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:33:48 ✅ New WebSocket client connected
-2025/11/08 21:33:48 WebSocket client connected. Total clients: 1
-2025/11/08 21:33:51 WebSocket error: websocket: close 1005 (no status)
-2025/11/08 21:33:51 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:33:56 ✅ New WebSocket client connected
-2025/11/08 21:33:56 WebSocket client connected. Total clients: 1
-2025/11/08 21:35:29 WebSocket error: websocket: close 1005 (no status)
-2025/11/08 21:35:29 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:37:39 📡 Broadcasted agent activity: TrendAgent - agent_start
-2025/11/08 21:37:44 📡 Broadcasted agent activity: TrendAgent - agent_complete
-2025/11/08 21:43:00 📡 Broadcasted agent activity: TrendAgent - agent_start
-2025/11/08 21:43:13 📡 Broadcasted agent activity: TrendAgent - agent_complete
-2025/11/08 21:48:39 📡 Broadcasted agent activity: TrendAgent - agent_start
-2025/11/08 21:48:47 📡 Broadcasted agent activity: TrendAgent - agent_complete
-2025/11/08 21:53:40 📡 Broadcasted agent activity: TrendAgent - agent_start
-2025/11/08 21:53:45 ✅ New WebSocket client connected
-2025/11/08 21:53:45 WebSocket client connected. Total clients: 1
-2025/11/08 21:53:52 WebSocket error: websocket: close 1005 (no status)
-2025/11/08 21:53:52 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:54:16 📡 Broadcasted agent activity: TrendAgent - agent_complete
-2025/11/08 21:54:41 ✅ New WebSocket client connected
-2025/11/08 21:54:41 WebSocket client connected. Total clients: 1
-2025/11/08 21:54:43 WebSocket error: websocket: close 1005 (no status)
-2025/11/08 21:54:43 WebSocket client disconnected. Total clients: 0
-2025/11/08 21:59:03 📡 Broadcasted agent activity: TrendAgent - agent_start
-2025/11/08 21:59:16 📡 Broadcasted agent activity: TrendAgent - agent_complete
-2025/11/08 22:03:24 ✅ New WebSocket client connected
-2025/11/08 22:03:24 WebSocket client connected. Total clients: 1
-2025/11/08 22:03:25 WebSocket error: websocket: close 1005 (no status)
-2025/11/08 22:03:25 WebSocket client disconnected. Total clients: 0
-2025/11/08 22:04:03 📡 Broadcasted agent activity: TrendAgent - agent_start
-2025/11/08 22:04:12 📡 Broadcasted agent activity: TrendAgent - agent_complete
+2025/11/08 22:58:42 ✅ Connected to Firestore
+2025/11/08 22:58:42 ✅ WebSocket hub started
+2025/11/08 22:58:42 👂 Starting Firestore listener for agent activity...
+2025/11/08 22:58:42 🚀 Dashboard API starting on port 8082
+2025/11/08 22:58:42 💬 Starting Firestore listener for new messages...
+2025/11/08 22:58:42 💬 Message listener initialized, waiting for new messages...
+2025/11/08 22:58:43 📡 Broadcasted agent activity: TrendAgent - agent_complete
+2025/11/08 22:59:10 ✅ New WebSocket client connected
+2025/11/08 22:59:10 WebSocket client connected. Total clients: 1
+2025/11/08 22:59:10 WebSocket client disconnected. Total clients: 0
+2025/11/08 22:59:10 ✅ New WebSocket client connected
+2025/11/08 22:59:10 WebSocket client connected. Total clients: 1
+2025/11/08 22:59:15 WebSocket error: websocket: close 1005 (no status)
+2025/11/08 22:59:15 WebSocket client disconnected. Total clients: 0
+2025/11/08 22:59:16 📡 Broadcasted agent activity: TrendAgent - agent_start
+2025/11/08 22:59:16 ✅ New WebSocket client connected
+2025/11/08 22:59:16 WebSocket client connected. Total clients: 1
+2025/11/08 22:59:19 WebSocket error: websocket: close 1005 (no status)
+2025/11/08 22:59:19 WebSocket client disconnected. Total clients: 0
+2025/11/08 22:59:21 ✅ New WebSocket client connected
+2025/11/08 22:59:21 WebSocket client connected. Total clients: 1
+2025/11/08 22:59:21 WebSocket client disconnected. Total clients: 0
+2025/11/08 22:59:21 ✅ New WebSocket client connected
+2025/11/08 22:59:21 WebSocket client connected. Total clients: 1
+2025/11/08 22:59:26 📡 Broadcasted agent activity: TrendAgent - agent_complete
+2025/11/08 22:59:30 WebSocket error: websocket: close 1005 (no status)
+2025/11/08 22:59:30 WebSocket client disconnected. Total clients: 0
+2025/11/08 23:01:26 ✅ New WebSocket client connected
+2025/11/08 23:01:26 WebSocket client connected. Total clients: 1
