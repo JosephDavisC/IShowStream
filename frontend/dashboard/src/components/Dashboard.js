@@ -20,22 +20,39 @@ function Dashboard() {
     // Check runtime config (injected by entrypoint.sh if available)
     if (typeof window !== 'undefined' && window.__RUNTIME_CONFIG__?.REACT_APP_API_URL) {
       const url = window.__RUNTIME_CONFIG__.REACT_APP_API_URL.trim();
-      if (url) return url;
+      if (url) {
+        console.log('✅ Using API URL from runtime config:', url);
+        return url;
+      }
     }
     // Check environment variable (set at build time)
     if (process.env.REACT_APP_API_URL) {
+      console.log('✅ Using API URL from build-time env:', process.env.REACT_APP_API_URL);
       return process.env.REACT_APP_API_URL;
     }
     // Auto-detect for Cloud Run - try to find dashboard-api service
     if (typeof window !== 'undefined' && window.location.hostname.includes('.run.app')) {
       const protocol = window.location.protocol;
       const hostname = window.location.hostname;
-      // Try common Cloud Run pattern: ishowstream-xxx -> dashboard-api-xxx
+      // Extract service ID from hostname (format: service-xxxxx-uc.a.run.app)
+      const match = hostname.match(/^([^-]+)-([^-]+)-([^.]+)\.(.+)$/);
+      if (match) {
+        const [, serviceName, serviceId, region, domain] = match;
+        // Construct dashboard-api URL with same service ID and region
+        const apiHostname = `dashboard-api-${serviceId}-${region}.${domain}`;
+        const apiUrl = `${protocol}//${apiHostname}`;
+        console.log('🔍 Auto-detected API URL from Cloud Run pattern:', apiUrl);
+        console.warn('⚠️ API URL not configured. Using auto-detection which may not work correctly.');
+        console.warn('   Please set REACT_APP_API_URL environment variable in Cloud Run service.');
+        return apiUrl;
+      }
+      // Fallback: try simple replacement
       const apiHostname = hostname.replace('ishowstream', 'dashboard-api');
-      console.log('🔍 Auto-detected API URL:', `${protocol}//${apiHostname}`);
+      console.log('🔍 Auto-detected API URL (fallback):', `${protocol}//${apiHostname}`);
       return `${protocol}//${apiHostname}`;
     }
     // Fallback to localhost for development
+    console.log('🌐 Using localhost API URL (development mode)');
     return 'http://localhost:8082';
   };
 

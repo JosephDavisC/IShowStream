@@ -1,21 +1,21 @@
 # Build stage
-FROM golang:1.21-alpine AS build
+FROM golang:1.23 AS build
 
 WORKDIR /app
 
-# Install git (required for some Go dependencies)
-RUN apk add --no-cache git
+# Set Go to auto-download toolchain if needed (for dependencies requiring newer Go)
+ENV GOTOOLCHAIN=auto
 
-# Copy go mod files
+# Copy go.mod and go.sum first for better Docker layer caching
 COPY go.mod go.sum ./
 
-# Download dependencies
+# Download dependencies (Go will auto-download newer toolchain if needed)
 RUN go mod download
 
 # Copy source code
 COPY . .
 
-# Build the application
+# Build the application (go build will handle any go.mod updates automatically)
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dashboard-api .
 
 # Production stage

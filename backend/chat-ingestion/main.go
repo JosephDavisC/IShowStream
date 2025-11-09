@@ -157,7 +157,9 @@ func handleMessage(message twitch.PrivateMessage) {
 }
 
 func saveToFirestore(msg ChatMessage) {
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	// Use a longer timeout to allow for OAuth token exchange and network latency
+	// Cloud Run services may need more time for initial authentication
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	// Create collection reference

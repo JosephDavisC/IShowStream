@@ -86,7 +86,10 @@ var firestoreClient *firestore.Client
 var wsHub *Hub
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
-		// Allow connections from localhost:3000 (React dev server)
+		// Allow all origins - Cloud Run handles security at the platform level
+		// For production, you can add origin validation here if needed
+		origin := r.Header.Get("Origin")
+		log.Printf("WebSocket connection from origin: %s", origin)
 		return true
 	},
 }
@@ -128,12 +131,35 @@ func main() {
 	mux.HandleFunc("/health", healthCheck)
 
 	// Enable CORS
-	handler := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000"},
-		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
-		AllowedHeaders:   []string{"*"},
-		AllowCredentials: true,
-	}).Handler(mux)
+	// Check if CORS_ALLOW_ALL is set to true
+	corsAllowAll := os.Getenv("CORS_ALLOW_ALL") == "true"
+	
+	var corsOptions cors.Options
+	if corsAllowAll {
+		// Allow all origins when CORS_ALLOW_ALL is true
+		corsOptions = cors.Options{
+			AllowedOrigins:   []string{"*"},
+			AllowedMethods:   []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
+			AllowedHeaders:   []string{"*"},
+			AllowCredentials: false, // Cannot use credentials with wildcard origin
+		}
+		log.Println("🌐 CORS: Allowing all origins (CORS_ALLOW_ALL=true)")
+	} else {
+		// Default: allow localhost and Cloud Run origins
+		corsOptions = cors.Options{
+			AllowedOrigins: []string{
+				"http://localhost:3000",
+				"http://localhost:8080",
+				"https://ishowstream-234sus25va-uc.a.run.app",
+			},
+			AllowedMethods:   []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
+			AllowedHeaders:   []string{"*"},
+			AllowCredentials: true,
+		}
+		log.Println("🌐 CORS: Allowing specific origins")
+	}
+	
+	handler := cors.New(corsOptions).Handler(mux)
 
 	// Start server
 	port := os.Getenv("PORT")
