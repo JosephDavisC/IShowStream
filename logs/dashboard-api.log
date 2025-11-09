@@ -77,3 +77,26 @@
 2025/11/08 23:11:24 WebSocket client disconnected. Total clients: 1
 2025/11/08 23:11:26 ✅ New WebSocket client connected
 2025/11/08 23:11:26 WebSocket client connected. Total clients: 2
+2025/11/08 23:12:22 WebSocket client disconnected. Total clients: 1
+2025/11/08 23:12:23 ✅ New WebSocket client connected
+2025/11/08 23:12:23 WebSocket client connected. Total clients: 2
+2025/11/08 23:12:25 WebSocket error: websocket: close 1005 (no status)
+2025/11/08 23:12:25 WebSocket client disconnected. Total clients: 1
+2025/11/08 23:12:33 ✅ New WebSocket client connected
+2025/11/08 23:12:33 WebSocket client connected. Total clients: 2
+2025/11/08 23:13:18 WebSocket client disconnected. Total clients: 1
+2025/11/08 23:13:20 ✅ New WebSocket client connected
+2025/11/08 23:13:20 WebSocket client connected. Total clients: 2
+2025/11/08 23:14:24 WebSocket client disconnected. Total clients: 1
+2025/11/08 23:14:26 ✅ New WebSocket client connected
+2025/11/08 23:14:26 WebSocket client connected. Total clients: 2
+2025/11/08 23:14:42 📡 Broadcasted agent activity: TrendAgent - agent_start
+2025/11/08 23:14:55 📡 Broadcasted agent activity: TrendAgent - agent_complete
+2025/11/08 23:16:59 WebSocket client disconnected. Total clients: 1
+2025/11/08 23:17:01 ✅ New WebSocket client connected
+2025/11/08 23:17:01 WebSocket client connected. Total clients: 2
+2025/11/08 23:17:03 WebSocket client disconnected. Total clients: 1
+2025/11/08 23:17:05 ✅ New WebSocket client connected
+2025/11/08 23:17:05 WebSocket client connected. Total clients: 2
+2025/11/08 23:17:08 ✅ New WebSocket client connected
+2025/11/08 23:17:08 WebSocket client connected. Total clients: 3
