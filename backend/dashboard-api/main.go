@@ -647,63 +647,66 @@ func updateChannel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Path to .env file (relative to project root)
-	envPath := filepath.Join("..", "..", "config", ".env")
-
-	// Read existing .env file
-	file, err := os.OpenFile(envPath, os.O_RDWR, 0644)
+	// In Cloud Run, we can't modify .env files, so we'll store the channel in Firestore
+	// The chat-ingestion service should read from Firestore or environment variables
+	ctx := context.Background()
+	
+	// Store channel configuration in Firestore
+	_, err := firestoreClient.Collection("config").Doc("twitch_channel").Set(ctx, map[string]interface{}{
+		"channel":   cleanChannel,
+		"updatedAt": time.Now(),
+	}, firestore.MergeAll)
+	
 	if err != nil {
-		log.Printf("Error opening .env file: %v", err)
-		http.Error(w, "Failed to update configuration", http.StatusInternalServerError)
+		log.Printf("Error updating channel in Firestore: %v", err)
+		http.Error(w, "Failed to update channel configuration", http.StatusInternalServerError)
 		return
 	}
-	defer file.Close()
 
-	// Read all lines
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	found := false
+	// Also try to update local .env file if it exists (for local development)
+	envPath := filepath.Join("..", "..", "config", ".env")
+	if file, err := os.OpenFile(envPath, os.O_RDWR, 0644); err == nil {
+		// File exists, try to update it
+		defer file.Close()
+		
+		var lines []string
+		scanner := bufio.NewScanner(file)
+		found := false
 
-	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.HasPrefix(line, "TWITCH_CHANNEL=") {
-			lines = append(lines, fmt.Sprintf("TWITCH_CHANNEL=%s", cleanChannel))
-			found = true
-		} else {
-			lines = append(lines, line)
+		for scanner.Scan() {
+			line := scanner.Text()
+			if strings.HasPrefix(line, "TWITCH_CHANNEL=") {
+				lines = append(lines, fmt.Sprintf("TWITCH_CHANNEL=%s", cleanChannel))
+				found = true
+			} else {
+				lines = append(lines, line)
+			}
 		}
-	}
 
-	if err := scanner.Err(); err != nil {
-		log.Printf("Error reading .env file: %v", err)
-		http.Error(w, "Failed to read configuration", http.StatusInternalServerError)
-		return
-	}
+		if !found {
+			lines = append(lines, fmt.Sprintf("TWITCH_CHANNEL=%s", cleanChannel))
+		}
 
-	// If TWITCH_CHANNEL wasn't found, add it
-	if !found {
-		lines = append(lines, fmt.Sprintf("TWITCH_CHANNEL=%s", cleanChannel))
+		file.Truncate(0)
+		file.Seek(0, 0)
+		writer := bufio.NewWriter(file)
+		for _, line := range lines {
+			writer.WriteString(line + "\n")
+		}
+		writer.Flush()
+		log.Printf("✅ Updated local .env file with TWITCH_CHANNEL=%s", cleanChannel)
 	}
-
-	// Write back to file
-	file.Truncate(0)
-	file.Seek(0, 0)
-	writer := bufio.NewWriter(file)
-	for _, line := range lines {
-		writer.WriteString(line + "\n")
-	}
-	writer.Flush()
 
 	// Update environment variable for current process
 	os.Setenv("TWITCH_CHANNEL", cleanChannel)
 
-	log.Printf("✅ Updated TWITCH_CHANNEL to: %s", cleanChannel)
+	log.Printf("✅ Updated TWITCH_CHANNEL to: %s (stored in Firestore)", cleanChannel)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"success": true,
 		"channel": cleanChannel,
-		"message": "Channel updated successfully. Please restart chat-ingestion service for changes to take effect.",
+		"message": "Channel updated successfully in Firestore. The chat-ingestion service will need to be restarted or updated to use the new channel.",
 	})
 }
 

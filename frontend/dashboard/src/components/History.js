@@ -6,7 +6,41 @@ function History() {
   const { resolvedItems } = useResolvedInsights();
   const [insights, setInsights] = useState([]);
   const [loading, setLoading] = useState(true);
-  const API_URL = 'http://localhost:8082';
+  
+  // Determine API URL - same logic as Dashboard.js
+  const getApiUrl = () => {
+    // Check runtime config (injected by entrypoint.sh if available)
+    if (typeof window !== 'undefined' && window.__RUNTIME_CONFIG__?.REACT_APP_API_URL) {
+      const url = window.__RUNTIME_CONFIG__.REACT_APP_API_URL.trim();
+      if (url) {
+        return url;
+      }
+    }
+    // Check environment variable (set at build time)
+    if (process.env.REACT_APP_API_URL) {
+      return process.env.REACT_APP_API_URL;
+    }
+    // Auto-detect for Cloud Run - try to find dashboard-api service
+    if (typeof window !== 'undefined' && window.location.hostname.includes('.run.app')) {
+      const protocol = window.location.protocol;
+      const hostname = window.location.hostname;
+      // Extract service ID from hostname (format: service-xxxxx-uc.a.run.app)
+      const match = hostname.match(/^([^-]+)-([^-]+)-([^.]+)\.(.+)$/);
+      if (match) {
+        const [, serviceName, serviceId, region, domain] = match;
+        // Construct dashboard-api URL with same service ID and region
+        const apiHostname = `dashboard-api-${serviceId}-${region}.${domain}`;
+        return `${protocol}//${apiHostname}`;
+      }
+      // Fallback: try simple replacement
+      const apiHostname = hostname.replace('ishowstream', 'dashboard-api');
+      return `${protocol}//${apiHostname}`;
+    }
+    // Fallback to localhost for development
+    return 'http://localhost:8082';
+  };
+  
+  const API_URL = getApiUrl();
 
   useEffect(() => {
     fetchHistory();
