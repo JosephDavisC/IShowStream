@@ -2,10 +2,13 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
+	"sync/atomic"
 	"syscall"
 	"time"
 
@@ -29,9 +32,11 @@ type ChatMessage struct {
 }
 
 var (
-	firestoreClient *firestore.Client
-	messageCount    = 0
-	startTime       = time.Now()
+	firestoreClient  *firestore.Client
+	messageCount     int64
+	startTime        = time.Now()
+	twitchConnected  atomic.Bool
+	firestoreHealthy atomic.Bool
 )
 
 func printStats() {
@@ -40,14 +45,45 @@ func printStats() {
 
 	for range ticker.C {
 		duration := time.Since(startTime)
-		rate := float64(messageCount) / duration.Seconds()
+		count := atomic.LoadInt64(&messageCount)
+		rate := float64(count) / duration.Seconds()
 
 		fmt.Printf("\n📊 Stats: %d messages in %v (%.2f msg/sec)\n\n",
-			messageCount,
+			count,
 			duration.Round(time.Second),
 			rate,
 		)
 	}
+}
+
+// HTTP handlers for Cloud Run
+func healthCheck(w http.ResponseWriter, r *http.Request) {
+	status := map[string]interface{}{
+		"status":            "healthy",
+		"twitch_connected":  twitchConnected.Load(),
+		"firestore_healthy": firestoreHealthy.Load(),
+		"messages_ingested": atomic.LoadInt64(&messageCount),
+		"uptime_seconds":    int(time.Since(startTime).Seconds()),
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(status)
+}
+
+func statsHandler(w http.ResponseWriter, r *http.Request) {
+	duration := time.Since(startTime)
+	count := atomic.LoadInt64(&messageCount)
+	rate := float64(count) / duration.Seconds()
+
+	stats := map[string]interface{}{
+		"total_messages":  count,
+		"uptime_seconds":  int(duration.Seconds()),
+		"messages_per_sec": rate,
+		"twitch_connected": twitchConnected.Load(),
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(stats)
 }
 
 func main() {
@@ -73,6 +109,7 @@ func main() {
 	defer firestoreClient.Close()
 
 	fmt.Println("✅ Connected to Firestore")
+	firestoreHealthy.Store(true)
 
 	// Create Twitch client (anonymous connection for read-only chat)
 	// For reading public chat, we don't need authentication
@@ -87,11 +124,13 @@ func main() {
 	client.OnConnect(func() {
 		fmt.Println("✅ Connected to Twitch IRC")
 		fmt.Println("📡 Listening for messages...")
+		twitchConnected.Store(true)
 	})
 
 	// Reconnection handler
 	client.OnReconnectMessage(func(message twitch.ReconnectMessage) {
 		fmt.Println("⚠️  Reconnecting to Twitch...")
+		twitchConnected.Store(false)
 	})
 
 	// Join a channel (configurable via environment variable)
@@ -105,11 +144,36 @@ func main() {
 	// Start stats reporting
 	go printStats()
 
-	// Start the client in a goroutine
+	// Start the Twitch client in a goroutine
 	go func() {
 		err := client.Connect()
 		if err != nil {
-			log.Fatal("Error connecting to Twitch:", err)
+			log.Printf("Error connecting to Twitch: %v", err)
+			twitchConnected.Store(false)
+		}
+	}()
+
+	// Start HTTP server for Cloud Run health checks
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/health", healthCheck)
+	mux.HandleFunc("/", healthCheck) // Cloud Run pings root for health
+	mux.HandleFunc("/stats", statsHandler)
+
+	server := &http.Server{
+		Addr:    ":" + port,
+		Handler: mux,
+	}
+
+	// Start HTTP server in goroutine
+	go func() {
+		fmt.Printf("🌐 HTTP server listening on port %s\n", port)
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Printf("HTTP server error: %v", err)
 		}
 	}()
 
@@ -122,11 +186,18 @@ func main() {
 	<-sigChan
 
 	fmt.Println("\n👋 Shutting down gracefully...")
+
+	// Shutdown HTTP server
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	server.Shutdown(shutdownCtx)
+
+	// Disconnect Twitch client
 	client.Disconnect()
 }
 
 func handleMessage(message twitch.PrivateMessage) {
-	messageCount++ // Increment message counter
+	atomic.AddInt64(&messageCount, 1) // Increment message counter atomically
 
 	// Create chat message object
 	chatMsg := ChatMessage{
