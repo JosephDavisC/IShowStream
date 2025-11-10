@@ -80,59 +80,14 @@ The **AgentOrchestrator** coordinates all agents:
 
 ## 🏗️ System Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        TWITCH IRC                               │
-│                  (Live Chat Messages)                           │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│              Chat Ingestion Service (Go)                        │
-│  • Connects to Twitch IRC                                       │
-│  • Saves messages to Firestore                                  │
-│  • Deployed on Cloud Run                                        │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    FIRESTORE DATABASE                           │
-│  Collections: messages, insights, trends, agent_activity        │
-└──────────┬──────────────────────────────────┬───────────────────┘
-           │                                  │
-           ▼                                  ▼
-┌──────────────────────────────┐    ┌───────────────────────────┐
-│  Multi-Agent Orchestrator    │    │  Insight Processor        │
-│  (Python + Gemini AI)        │    │  (Python + Gemini AI)     │
-│                              │    │                           │
-│  Agent 1: SpamFilter    ──┐  │    │  Analyzes last 60s        │
-│  Agent 2: Priority      ──┤  │    │  Generates insights       │
-│  Agent 3: Engagement    ──┤  │    │  Runs every 1 minute      │
-│  Agent 4: TrendAgent    ──┘  │    │                           │
-│  (runs every 5 min)          │    └───────────────────────────┘
-│                              │
-│  Saves results to Firestore  │
-│  Deployed on Cloud Run       │
-└──────────────────────────────┘
-           │
-           ▼
-┌─────────────────────────────────────────────────────────────────┐
-│              Dashboard API (Go + WebSocket)                     │
-│  • REST endpoints for data                                      │
-│  • WebSocket for real-time agent activity                       │
-│  • Deployed on Cloud Run                                        │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│              React Dashboard (Frontend)                         │
-│  • Real-time stats and metrics                                  │
-│  • AI-generated insights (1-min updates)                        │
-│  • Agent activity log (WebSocket)                               │
-│  • Priority message feed                                        │
-│  • Deployed on Cloud Run                                        │
-└─────────────────────────────────────────────────────────────────┘
-```
+![IShowStream system architecture diagram](./Diagram.png)
+
+**Pipeline overview**
+- Twitch IRC sends live chat messages to the Chat Ingestion Service
+- Messages are saved to Firestore
+- The Multi Agent Orchestrator in Python with Gemini AI processes messages and writes insights and trends to Firestore
+- The Dashboard API in Go serves REST and WebSocket endpoints
+- The React Dashboard subscribes to real time updates and renders insights
 
 ---
 
