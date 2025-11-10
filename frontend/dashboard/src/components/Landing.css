@@ -337,4 +337,121 @@
     .quick-start-section {
         padding: 60px 0;
     }
+
+    .blog-preview-section {
+        padding: 60px 0;
+    }
+
+    .blog-preview-card {
+        padding: 40px 30px;
+    }
+
+    .blog-preview-icon {
+        font-size: 48px;
+    }
+
+    .blog-preview-content h2 {
+        font-size: 2rem;
+    }
+}
+
+/* Blog Preview Section */
+.blog-preview-section {
+    padding: 80px 0 120px;
+    background: var(--bg-secondary);
+}
+
+.blog-preview-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 24px;
+    padding: 60px 50px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.blog-preview-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.blog-preview-card:hover::before {
+    opacity: 1;
+}
+
+.blog-preview-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.5);
+}
+
+.blog-preview-content {
+    text-align: center;
+    color: white;
+    position: relative;
+    z-index: 1;
+}
+
+.blog-preview-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.blog-preview-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.blog-preview-content p {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    margin-bottom: 30px;
+    color: rgba(255, 255, 255, 0.95);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.blog-preview-link {
+    display: inline-block;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: white;
+    padding: 12px 30px;
+    border: 2px solid white;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.blog-preview-card:hover .blog-preview-link {
+    background: white;
+    color: #667eea;
+    transform: translateX(5px);
 }

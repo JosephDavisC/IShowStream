@@ -146,43 +146,26 @@ function Landing() {
                 </div>
             </section>
 
-            {/* Features Section */}
-            <section className="landing-features">
+            {/* Blog Section */}
+            <section className="blog-preview-section">
                 <div className="landing-container">
-                    <div className="features-grid">
-                        <div
-                            className="feature-card scroll-reveal"
-                            ref={(el) => (sectionsRef.current[0] = el)}
-                        >
-                            <div className="feature-icon">🤖</div>
-                            <h3>AI-Powered Analysis</h3>
+                    <div
+                        className="blog-preview-card scroll-reveal"
+                        ref={(el) => (sectionsRef.current[7] = el)}
+                        onClick={() => navigate("/blog")}
+                    >
+                        <div className="blog-preview-content">
+                            <div className="blog-preview-icon">📝</div>
+                            <h2>Behind the Scenes</h2>
                             <p>
-                                Multi-agent system analyzes your chat in
-                                real-time with spam detection and priority
-                                ranking.
+                                Learn how we built IShowStream with Gemini AI,
+                                Go, Python, and Google Cloud Run. Discover the
+                                technology stack, architecture, and innovation
+                                that powers real-time chat analytics.
                             </p>
-                        </div>
-                        <div
-                            className="feature-card scroll-reveal"
-                            ref={(el) => (sectionsRef.current[1] = el)}
-                        >
-                            <div className="feature-icon">💡</div>
-                            <h3>Actionable Insights</h3>
-                            <p>
-                                Get AI-generated insights highlighting
-                                questions, requests, and actionable items.
-                            </p>
-                        </div>
-                        <div
-                            className="feature-card scroll-reveal"
-                            ref={(el) => (sectionsRef.current[2] = el)}
-                        >
-                            <div className="feature-icon">📊</div>
-                            <h3>Live Dashboard</h3>
-                            <p>
-                                Monitor chat activity and AI analysis in one
-                                beautiful, real-time dashboard.
-                            </p>
+                            <span className="blog-preview-link">
+                                Read Our Story →
+                            </span>
                         </div>
                     </div>
                 </div>

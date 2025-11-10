@@ -15,6 +15,7 @@ import StreamerSetup from "./components/StreamerSetup";
 import Dashboard from "./components/Dashboard";
 import Profile from "./components/Profile";
 import History from "./components/History";
+import Blog from "./components/Blog";
 
 // Protected Route component
 function ProtectedRoute({ children }) {
@@ -113,6 +114,7 @@ function App() {
                 <Navbar />
                 <Routes>
                     <Route path="/" element={<Landing />} />
+                    <Route path="/blog" element={<Blog />} />
                     <Route path="/login" element={<Login />} />
                     <Route
                         path="/setup"

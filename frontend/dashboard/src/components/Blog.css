@@ -1,0 +1,476 @@
+.blog-page {
+    min-height: 100vh;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 40px 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.blog-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.blog-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 60px 40px 40px;
+    position: relative;
+}
+
+.back-button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateX(-5px);
+}
+
+.blog-title {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 20px 0;
+}
+
+.blog-meta {
+    font-size: 14px;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.blog-content {
+    padding: 60px 40px;
+}
+
+.blog-section {
+    margin-bottom: 50px;
+}
+
+.blog-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #667eea;
+}
+
+.blog-section h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #4a5568;
+    margin: 30px 0 15px 0;
+}
+
+.blog-section p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #4a5568;
+    margin-bottom: 15px;
+}
+
+.blog-section ul {
+    margin: 20px 0;
+    padding-left: 20px;
+}
+
+.blog-section li {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #4a5568;
+    margin-bottom: 10px;
+}
+
+.blog-section strong {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.blog-section em {
+    font-style: italic;
+    color: #667eea;
+}
+
+.blog-section small {
+    font-size: 14px;
+    color: #718096;
+}
+
+blockquote {
+    background: #f7fafc;
+    border-left: 4px solid #667eea;
+    padding: 20px 30px;
+    margin: 30px 0;
+    font-size: 18px;
+    font-style: italic;
+    color: #4a5568;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+}
+
+.feature-list li {
+    background: #f7fafc;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.demo-section {
+    background: #f7fafc;
+    padding: 30px;
+    border-radius: 12px;
+    margin: 20px 0;
+}
+
+.user-flow {
+    background: white;
+    padding: 20px 30px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.user-flow li {
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.user-flow li:last-child {
+    border-bottom: none;
+}
+
+.demo-cta {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.demo-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 40px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.demo-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.tech-section {
+    background: #f7fafc;
+    padding: 40px;
+    border-radius: 12px;
+    margin: 40px 0;
+}
+
+.architecture-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 30px 0;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+}
+
+.arch-box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 250px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.arch-box strong {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.arch-box p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+    color: white;
+}
+
+.arch-arrow {
+    font-size: 24px;
+    color: #667eea;
+    font-weight: bold;
+}
+
+.tech-stack {
+    display: grid;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.tech-item {
+    background: var(--bg-primary);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #9147ff;
+    margin-bottom: 15px;
+}
+
+.tech-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.tech-desc {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.tech-item strong {
+    color: #667eea;
+}
+
+.innovation-list {
+    list-style: none;
+    padding: 0;
+}
+
+.innovation-list li {
+    background: white;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.github-link {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.github-link a {
+    display: inline-block;
+    background: #2d3748;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.github-link a:hover {
+    background: #1a202c;
+    transform: translateY(-2px);
+}
+
+.team-section {
+    background: #f7fafc;
+    padding: 40px;
+    border-radius: 12px;
+}
+
+.team-members {
+    display: grid;
+    gap: 25px;
+    margin: 30px 0;
+}
+
+.team-member {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+}
+
+.team-member h3 {
+    margin: 0 0 5px 0;
+    color: #2d3748;
+    font-size: 20px;
+}
+
+.team-role {
+    color: #667eea;
+    font-weight: 600;
+    margin: 0 0 10px 0 !important;
+    font-size: 14px !important;
+}
+
+.team-footer {
+    text-align: center;
+    font-style: italic;
+    margin-top: 30px;
+}
+
+.impact-list {
+    list-style: none;
+    padding: 0;
+}
+
+.impact-list li {
+    background: #f7fafc;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.conclusion {
+    text-align: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 50px 40px;
+    border-radius: 12px;
+    margin: 50px 0;
+}
+
+.conclusion h2 {
+    color: white;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.conclusion-text {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.6;
+    margin: 30px 0;
+    color: white;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.cta-button {
+    padding: 15px 35px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.cta-button.primary {
+    background: white;
+    color: #667eea;
+}
+
+.cta-button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+}
+
+.cta-button.secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid white;
+}
+
+.cta-button.secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.contact-email {
+    margin: 20px 0;
+    font-size: 16px;
+}
+
+.contact-email a {
+    color: white;
+    text-decoration: underline;
+}
+
+.tagline {
+    font-size: 18px;
+    font-style: italic;
+    margin-top: 30px;
+    opacity: 0.95;
+}
+
+.highlights-summary {
+    background: #f7fafc;
+    padding: 40px;
+    border-radius: 12px;
+}
+
+.highlights-summary ul {
+    list-style: none;
+    padding: 0;
+}
+
+.highlights-summary li {
+    background: white;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    .blog-page {
+        padding: 20px 10px;
+    }
+
+    .blog-header {
+        padding: 40px 20px 30px;
+    }
+
+    .blog-title {
+        font-size: 24px;
+    }
+
+    .blog-content {
+        padding: 40px 20px;
+    }
+
+    .blog-section h2 {
+        font-size: 22px;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .cta-button {
+        width: 100%;
+        text-align: center;
+    }
+}
