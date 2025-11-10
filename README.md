@@ -296,7 +296,7 @@ gcloud run deploy ishowstream \
 **Google Cloud Run Hackathon 2025**
 - **Category**: AI Agents
 - **Technologies**: Cloud Run, Gemini AI, Firestore, Go, Python, React
-- **Team**: JJA ([Joseph Davis Chamdani](https://github.com/JosephDavisC), [Abraham Guan](https://github.com/AbrahamWG), [Juwita Jessica Pangestu](https://github.com/JuwitaJessicaP))
+- **Team**: JJA ([Joseph Davis Chamdani](https://github.com/JosephDavisC), [Juwita Jessica Pangestu](https://github.com/JuwitaJessicaP), [Abraham Guan](https://github.com/AbrahamWG))
 
 ---
 
