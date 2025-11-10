@@ -1,141 +1,155 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './contexts/AuthContext';
-import './App.css';
-import Navbar from './components/Navbar';
-import Landing from './components/Landing';
-import Login from './components/Login';
-import StreamerSetup from './components/StreamerSetup';
-import Dashboard from './components/Dashboard';
-import Profile from './components/Profile';
-import History from './components/History';
+import React from "react";
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+} from "react-router-dom";
+import { useAuth } from "./contexts/AuthContext";
+import { WebSocketProvider } from "./contexts/WebSocketContext";
+import "./App.css";
+import Navbar from "./components/Navbar";
+import Landing from "./components/Landing";
+import Login from "./components/Login";
+import StreamerSetup from "./components/StreamerSetup";
+import Dashboard from "./components/Dashboard";
+import Profile from "./components/Profile";
+import History from "./components/History";
 
 // Protected Route component
 function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
+    const { user, loading } = useAuth();
 
-  if (loading) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        background: '#0e0e10',
-        color: '#efeff1'
-      }}>
-        Loading...
-      </div>
-    );
-  }
+    if (loading) {
+        return (
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100vh",
+                    background: "#0e0e10",
+                    color: "#efeff1",
+                }}
+            >
+                Loading...
+            </div>
+        );
+    }
 
-  return user ? children : <Navigate to="/login" />;
+    return user ? children : <Navigate to="/login" />;
 }
 
 // Streamer Setup Route - only accessible if logged in but channel not set
 function StreamerSetupRoute({ children }) {
-  const { user, userConfig, loading } = useAuth();
+    const { user, userConfig, loading } = useAuth();
 
-  if (loading) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        background: '#0e0e10',
-        color: '#efeff1'
-      }}>
-        Loading...
-      </div>
-    );
-  }
+    if (loading) {
+        return (
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100vh",
+                    background: "#0e0e10",
+                    color: "#efeff1",
+                }}
+            >
+                Loading...
+            </div>
+        );
+    }
 
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
+    if (!user) {
+        return <Navigate to="/login" />;
+    }
 
-  // If channel is set, redirect to dashboard
-  if (userConfig?.twitchChannel) {
-    return <Navigate to="/dashboard" />;
-  }
+    // If channel is set, redirect to dashboard
+    if (userConfig?.twitchChannel) {
+        return <Navigate to="/dashboard" />;
+    }
 
-  return children;
+    return children;
 }
 
 // Dashboard Route - only accessible if logged in and channel is set
 function DashboardRoute({ children }) {
-  const { user, userConfig, loading } = useAuth();
+    const { user, userConfig, loading } = useAuth();
 
-  if (loading) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        background: '#0e0e10',
-        color: '#efeff1'
-      }}>
-        Loading...
-      </div>
-    );
-  }
+    if (loading) {
+        return (
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100vh",
+                    background: "#0e0e10",
+                    color: "#efeff1",
+                }}
+            >
+                Loading...
+            </div>
+        );
+    }
 
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
+    if (!user) {
+        return <Navigate to="/login" />;
+    }
 
-  // If channel not set, redirect to setup
-  if (!userConfig?.twitchChannel) {
-    return <Navigate to="/setup" />;
-  }
+    // If channel not set, redirect to setup
+    if (!userConfig?.twitchChannel) {
+        return <Navigate to="/setup" />;
+    }
 
-  return children;
+    return children;
 }
 
 function App() {
-  return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/setup"
-          element={
-            <StreamerSetupRoute>
-              <StreamerSetup />
-            </StreamerSetupRoute>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <DashboardRoute>
-              <Dashboard />
-            </DashboardRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/history"
-          element={
-            <ProtectedRoute>
-              <History />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </Router>
-  );
+    return (
+        <Router>
+            <WebSocketProvider>
+                <Navbar />
+                <Routes>
+                    <Route path="/" element={<Landing />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route
+                        path="/setup"
+                        element={
+                            <StreamerSetupRoute>
+                                <StreamerSetup />
+                            </StreamerSetupRoute>
+                        }
+                    />
+                    <Route
+                        path="/dashboard"
+                        element={
+                            <DashboardRoute>
+                                <Dashboard />
+                            </DashboardRoute>
+                        }
+                    />
+                    <Route
+                        path="/profile"
+                        element={
+                            <ProtectedRoute>
+                                <Profile />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/history"
+                        element={
+                            <ProtectedRoute>
+                                <History />
+                            </ProtectedRoute>
+                        }
+                    />
+                </Routes>
+            </WebSocketProvider>
+        </Router>
+    );
 }
 
 export default App;

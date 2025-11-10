@@ -81,6 +81,21 @@ func listenForChannelChanges(ctx context.Context) {
 		}
 
 		data := snap.Data()
+
+		// Check monitoring_enabled flag
+		if enabled, ok := data["monitoring_enabled"].(bool); ok {
+			currentEnabled := monitoringEnabled.Load()
+			if enabled != currentEnabled {
+				monitoringEnabled.Store(enabled)
+				if enabled {
+					log.Printf("▶️  Monitoring RESUMED")
+				} else {
+					log.Printf("⏸️  Monitoring PAUSED")
+				}
+			}
+		}
+
+		// Check channel changes
 		if newChannel, ok := data["channel"].(string); ok && newChannel != "" {
 			// Get current channel
 			currentChan := ""
@@ -132,12 +147,14 @@ func healthCheck(w http.ResponseWriter, r *http.Request) {
 	}
 
 	status := map[string]interface{}{
-		"status":            "healthy",
-		"twitch_connected":  twitchConnected.Load(),
-		"firestore_healthy": firestoreHealthy.Load(),
-		"messages_ingested": atomic.LoadInt64(&messageCount),
-		"uptime_seconds":    int(time.Since(startTime).Seconds()),
-		"current_channel":   channel,
+		"status":             "healthy",
+		"twitch_connected":   twitchConnected.Load(),
+		"firestore_healthy":  firestoreHealthy.Load(),
+		"messages_ingested":  atomic.LoadInt64(&messageCount),
+		"messages_paused":    atomic.LoadInt64(&messagesPaused),
+		"uptime_seconds":     int(time.Since(startTime).Seconds()),
+		"current_channel":    channel,
+		"monitoring_enabled": monitoringEnabled.Load(),
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -207,13 +224,28 @@ func main() {
 		twitchConnected.Store(false)
 	})
 
-	// Get initial channel from Firestore config, fallback to environment variable
+	// Get initial channel and monitoring state from Firestore config
 	channel := ""
+	monitoringEnabledInitial := true // default to enabled
+
 	configDoc, err := firestoreClient.Collection("config").Doc("twitch_channel").Get(ctx)
 	if err == nil && configDoc.Exists() {
-		if ch, ok := configDoc.Data()["channel"].(string); ok && ch != "" {
+		data := configDoc.Data()
+
+		// Get channel
+		if ch, ok := data["channel"].(string); ok && ch != "" {
 			channel = ch
 			fmt.Printf("📋 Loaded channel from Firestore config: %s\n", channel)
+		}
+
+		// Get monitoring_enabled flag
+		if enabled, ok := data["monitoring_enabled"].(bool); ok {
+			monitoringEnabledInitial = enabled
+			if enabled {
+				fmt.Printf("▶️  Monitoring is ENABLED\n")
+			} else {
+				fmt.Printf("⏸️  Monitoring is PAUSED\n")
+			}
 		}
 	}
 
@@ -225,6 +257,9 @@ func main() {
 		}
 		fmt.Printf("📋 Using channel from environment: %s\n", channel)
 	}
+
+	// Set initial monitoring state
+	monitoringEnabled.Store(monitoringEnabledInitial)
 
 	twitchClient.Join(channel)
 	currentChannel.Store(channel)
@@ -322,6 +357,12 @@ func handleMessage(message twitch.PrivateMessage) {
 }
 
 func saveToFirestore(msg ChatMessage) {
+	// Check if monitoring is enabled
+	if !monitoringEnabled.Load() {
+		atomic.AddInt64(&messagesPaused, 1)
+		return
+	}
+
 	// Use a longer timeout to allow for OAuth token exchange and network latency
 	// Cloud Run services may need more time for initial authentication
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

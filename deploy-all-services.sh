@@ -69,7 +69,7 @@ gcloud run deploy chat-ingestion \
   --timeout=3600 \
   --cpu=1 \
   --memory=512Mi \
-  --min-instances=1 \
+  --min-instances=0 \
   --max-instances=3 \
   --platform=managed
 
@@ -123,7 +123,7 @@ gcloud run deploy agents \
   --timeout=3600 \
   --cpu=2 \
   --memory=2Gi \
-  --min-instances=1 \
+  --min-instances=0 \
   --max-instances=3 \
   --platform=managed \
   --no-cpu-throttling
@@ -246,14 +246,11 @@ echo -e "   ${BLUE}gcloud run services delete chat-ingestion dashboard-api agent
 echo
 
 echo -e "${YELLOW}💰 Cost Management:${NC}"
-echo -e "   • chat-ingestion: min-instances=1 (always running)"
-echo -e "   • agents: min-instances=1 (always running)"
-echo -e "   • dashboard-api: min-instances=0 (scales to zero)"
-echo -e "   • frontend: min-instances=0 (scales to zero)"
+echo -e "   • All services: min-instances=0 (auto-scales to zero when idle)"
+echo -e "   • Services scale down after ~15 minutes of inactivity"
+echo -e "   • Cold start time: ~5-10 seconds when scaling from zero"
 echo
-echo -e "   To reduce costs, set min-instances=0 for chat-ingestion and agents:"
-echo -e "   ${BLUE}gcloud run services update chat-ingestion --region=${REGION} --min-instances=0${NC}"
-echo -e "   ${BLUE}gcloud run services update agents --region=${REGION} --min-instances=0${NC}"
+echo -e "   ${GREEN}Use the Profile page to pause/resume monitoring and save API credits!${NC}"
 echo
 
 echo -e "${GREEN}🎮 Next Steps:${NC}"

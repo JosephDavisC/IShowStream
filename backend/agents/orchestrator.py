@@ -1,6 +1,7 @@
 import os
 import signal
 import time
+from datetime import datetime, timedelta
 from google.cloud import firestore
 from google import genai
 from google.genai import types
@@ -10,6 +11,7 @@ from spam_filter_agent import SpamFilterAgent
 from priority_agent import PriorityAgent
 from engagement_agent import EngagementAgent
 from trend_agent import TrendAgent
+from insight_agent import InsightAgent
 
 load_dotenv('../../config/.env')
 
@@ -72,8 +74,13 @@ class AgentOrchestrator:
         print(f"    Role: Detect trending topics and patterns")
         print(f"    Capabilities: trend_detection, meme_tracking, spam_wave_detection")
 
+        self.insight_agent = InsightAgent()
+        print(f"  ✓ InsightAgent v1.0")
+        print(f"    Role: Generate actionable insights for streamers")
+        print(f"    Capabilities: sentiment_analysis, question_detection, content_request_extraction")
+
         print("-" * 70)
-        print("✅ All 4 agents initialized!")
+        print("✅ All 5 agents initialized!")
         print()
 
         # ADK State Management
@@ -83,6 +90,7 @@ class AgentOrchestrator:
         self.spam_detected = 0
         self.high_priority_count = 0
         self.last_trend_analysis = time.time()  # Track when we last ran trend analysis
+        self.last_insight_generation = time.time()  # Track when we last generated insights
 
         # Rate Limiting for AI API calls
         self.ai_calls_today = 0
@@ -96,9 +104,14 @@ class AgentOrchestrator:
         # Agent Activity Logging
         self.activity_collection = self.db.collection('agent_activity')
 
-        # Graceful shutdown
-        signal.signal(signal.SIGINT, self._shutdown)
-        signal.signal(signal.SIGTERM, self._shutdown)
+        # Graceful shutdown (only register signals if running in main thread)
+        try:
+            signal.signal(signal.SIGINT, self._shutdown)
+            signal.signal(signal.SIGTERM, self._shutdown)
+        except ValueError:
+            # Running in a background thread, signals can't be registered
+            # This is expected when running via server.py
+            pass
 
     def _shutdown(self, signum, frame):
         """Handle graceful shutdown"""
@@ -216,6 +229,106 @@ class AgentOrchestrator:
                 status="error"
             )
 
+    def run_insight_generation(self):
+        """
+        Run InsightAgent to generate actionable insights for streamers
+        This runs periodically (every 1 minute) to analyze recent messages
+        """
+        try:
+            print("\n" + "=" * 70)
+            print("💡 Agent 5: InsightAgent - Generating actionable insights...")
+            print("=" * 70)
+
+            # Get messages from last 1 minute
+            one_minute_ago = datetime.utcnow() - timedelta(minutes=1)
+
+            query = (self.db.collection('messages')
+                    .where('timestamp', '>=', one_minute_ago)
+                    .order_by('timestamp')
+                    .limit(100))
+
+            docs = query.stream()
+            messages = []
+            for doc in docs:
+                msg_data = doc.to_dict()
+                messages.append({
+                    'username': msg_data.get('username', 'Unknown'),
+                    'message': msg_data.get('message', ''),
+                    'timestamp': msg_data.get('timestamp')
+                })
+
+            if len(messages) < 5:
+                print("⚠️  Not enough messages for insight generation (need at least 5)")
+                return
+
+            print(f"   Analyzing {len(messages)} messages from last 1 minute...")
+
+            # Log: InsightAgent started
+            self.log_activity(
+                activity_type="agent_start",
+                agent_name="InsightAgent",
+                message_data={'username': 'System', 'message': f'Analyzing {len(messages)} messages'},
+                status="processing"
+            )
+
+            # Generate insights
+            insights = self.insight_agent.analyze_batch(messages)
+
+            if "error" not in insights:
+                # Save insights to Firestore
+                insight_doc = {
+                    'timestamp': firestore.SERVER_TIMESTAMP,
+                    'message_count': len(messages),
+                    'insights': insights,
+                    'timeframe': '1_minute'
+                }
+                self.db.collection('insights').add(insight_doc)
+
+                # Display results
+                print(f"\n   💡 Insight Generation Results:")
+
+                if insights.get('sentiment'):
+                    sentiment = insights['sentiment']
+                    print(f"      Sentiment: {sentiment.get('overall')} ({sentiment.get('trend')})")
+
+                if insights.get('actionable_insights'):
+                    print(f"\n      🎯 Actionable Insights ({len(insights['actionable_insights'])}):")
+                    for insight in insights['actionable_insights'][:3]:
+                        print(f"         • {insight}")
+
+                if insights.get('important_questions'):
+                    print(f"\n      ❓ Important Questions ({len(insights['important_questions'])}):")
+                    for q in insights['important_questions'][:3]:
+                        print(f"         • [{q.get('username')}]: {q.get('question')}")
+
+                # Log: InsightAgent complete
+                self.log_activity(
+                    activity_type="agent_complete",
+                    agent_name="InsightAgent",
+                    message_data={'username': 'System', 'message': f'Generated insights from {len(messages)} messages'},
+                    result_data={
+                        'sentiment': insights.get('sentiment', {}).get('overall', 'unknown'),
+                        'actionable_count': len(insights.get('actionable_insights', [])),
+                        'questions_count': len(insights.get('important_questions', []))
+                    },
+                    status="complete"
+                )
+
+                print("\n   ✅ Insights generated and saved!")
+                print("=" * 70 + "\n")
+            else:
+                print(f"   ⚠️  Insight generation returned error: {insights.get('error')}")
+
+        except Exception as e:
+            print(f"   ❌ InsightAgent error: {e}")
+            self.log_activity(
+                activity_type="agent_complete",
+                agent_name="InsightAgent",
+                message_data={'username': 'System', 'message': 'Insight generation failed'},
+                result_data={'error': str(e)},
+                status="error"
+            )
+
     def _should_use_ai(self, message_text, username, is_sub, is_mod):
         """
         Smart filter: Determine if message is worth an AI call
@@ -310,8 +423,9 @@ class AgentOrchestrator:
         print("📋 Agent Pipeline: Message → SpamFilter → Priority → Engagement → Trend → Dashboard")
         print()
 
-        # Run initial trend analysis on startup
+        # Run initial trend analysis and insight generation on startup
         self.run_trend_analysis()
+        self.run_insight_generation()
 
         # Batch settings
         enable_batch = os.getenv('ENABLE_BATCH', '1') in ('1', 'true', 'TRUE')
@@ -335,10 +449,15 @@ class AgentOrchestrator:
         while self.running:
             try:
                 # Run TrendAgent every 5 minutes (300 seconds)
+                # Run InsightAgent every 1 minute (60 seconds)
                 current_time = time.time()
                 if current_time - self.last_trend_analysis >= 300:  # 5 minutes
                     self.run_trend_analysis()
                     self.last_trend_analysis = current_time
+
+                if current_time - self.last_insight_generation >= 60:  # 1 minute
+                    self.run_insight_generation()
+                    self.last_insight_generation = current_time
 
                 # Try batched processing first
                 if enable_batch and batch_client:

@@ -127,6 +127,9 @@ func main() {
 	mux.HandleFunc("/api/streamer", getStreamerInfo)
 	mux.HandleFunc("/api/agent-activity", getAgentActivity)
 	mux.HandleFunc("/api/update-channel", updateChannel)
+	mux.HandleFunc("/api/monitoring/pause", pauseMonitoring)
+	mux.HandleFunc("/api/monitoring/resume", resumeMonitoring)
+	mux.HandleFunc("/api/monitoring/status", getMonitoringStatus)
 	mux.HandleFunc("/ws", handleWebSocket)
 	mux.HandleFunc("/health", healthCheck)
 
@@ -707,6 +710,88 @@ func updateChannel(w http.ResponseWriter, r *http.Request) {
 		"success": true,
 		"channel": cleanChannel,
 		"message": "Channel updated successfully in Firestore. The chat-ingestion service will need to be restarted or updated to use the new channel.",
+	})
+}
+
+func pauseMonitoring(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	ctx := context.Background()
+
+	// Update Firestore config to set monitoring_enabled = false
+	_, err := firestoreClient.Collection("config").Doc("twitch_channel").Set(ctx, map[string]interface{}{
+		"monitoring_enabled": false,
+		"updatedAt":          time.Now(),
+	}, firestore.MergeAll)
+
+	if err != nil {
+		log.Printf("Error pausing monitoring: %v", err)
+		http.Error(w, "Failed to pause monitoring", http.StatusInternalServerError)
+		return
+	}
+
+	log.Printf("⏸️  Monitoring PAUSED via API")
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"success": true,
+		"message": "Monitoring paused. Chat messages will no longer be saved to Firestore.",
+	})
+}
+
+func resumeMonitoring(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	ctx := context.Background()
+
+	// Update Firestore config to set monitoring_enabled = true
+	_, err := firestoreClient.Collection("config").Doc("twitch_channel").Set(ctx, map[string]interface{}{
+		"monitoring_enabled": true,
+		"updatedAt":          time.Now(),
+	}, firestore.MergeAll)
+
+	if err != nil {
+		log.Printf("Error resuming monitoring: %v", err)
+		http.Error(w, "Failed to resume monitoring", http.StatusInternalServerError)
+		return
+	}
+
+	log.Printf("▶️  Monitoring RESUMED via API")
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"success": true,
+		"message": "Monitoring resumed. Chat messages will be saved to Firestore.",
+	})
+}
+
+func getMonitoringStatus(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	// Get current monitoring status from Firestore
+	configDoc, err := firestoreClient.Collection("config").Doc("twitch_channel").Get(ctx)
+	if err != nil {
+		log.Printf("Error getting monitoring status: %v", err)
+		http.Error(w, "Failed to get monitoring status", http.StatusInternalServerError)
+		return
+	}
+
+	monitoringEnabled := true // default to enabled
+	if configDoc.Exists() {
+		if enabled, ok := configDoc.Data()["monitoring_enabled"].(bool); ok {
+			monitoringEnabled = enabled
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"monitoring_enabled": monitoringEnabled,
 	})
 }
 
