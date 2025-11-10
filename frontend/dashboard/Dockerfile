@@ -39,16 +39,16 @@ FROM nginx:alpine
 # Copy built files to nginx
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy entrypoint script
+# Copy entrypoint script (which generates nginx config dynamically)
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Expose port 80
-EXPOSE 80
+# Set default PORT (Cloud Run will override this)
+ENV PORT=8080
 
-# Use entrypoint script to inject runtime configuration
+# Expose port (Cloud Run uses PORT env var)
+EXPOSE 8080
+
+# Use entrypoint script to inject runtime configuration and start nginx
 ENTRYPOINT ["/entrypoint.sh"]
 

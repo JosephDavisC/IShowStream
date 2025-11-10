@@ -32,11 +32,15 @@ type ChatMessage struct {
 }
 
 var (
-	firestoreClient  *firestore.Client
-	messageCount     int64
-	startTime        = time.Now()
-	twitchConnected  atomic.Bool
-	firestoreHealthy atomic.Bool
+	firestoreClient    *firestore.Client
+	messageCount       int64
+	startTime          = time.Now()
+	twitchConnected    atomic.Bool
+	firestoreHealthy   atomic.Bool
+	currentChannel     atomic.Value // stores current channel name as string
+	twitchClient       *twitch.Client
+	monitoringEnabled  atomic.Bool  // stores whether monitoring is enabled
+	messagesPaused     int64        // count of messages skipped while paused
 )
 
 func printStats() {
@@ -56,14 +60,84 @@ func printStats() {
 	}
 }
 
+// listenForChannelChanges watches Firestore for channel configuration updates
+func listenForChannelChanges(ctx context.Context) {
+	log.Println("👂 Starting Firestore listener for channel configuration changes...")
+
+	// Listen for changes to the twitch_channel config document
+	iter := firestoreClient.Collection("config").Doc("twitch_channel").Snapshots(ctx)
+	defer iter.Stop()
+
+	for {
+		snap, err := iter.Next()
+		if err != nil {
+			log.Printf("⚠️  Firestore channel listener error: %v", err)
+			time.Sleep(5 * time.Second)
+			continue
+		}
+
+		if !snap.Exists() {
+			continue
+		}
+
+		data := snap.Data()
+		if newChannel, ok := data["channel"].(string); ok && newChannel != "" {
+			// Get current channel
+			currentChan := ""
+			if val := currentChannel.Load(); val != nil {
+				currentChan = val.(string)
+			}
+
+			// Only update if channel has changed
+			if newChannel != currentChan {
+				log.Printf("🔄 Channel change detected: %s → %s", currentChan, newChannel)
+				updateTwitchChannel(newChannel)
+			}
+		}
+	}
+}
+
+// updateTwitchChannel switches to a new Twitch channel
+func updateTwitchChannel(newChannel string) {
+	if twitchClient == nil {
+		log.Printf("⚠️  Twitch client not initialized yet, skipping channel update")
+		return
+	}
+
+	// Get current channel
+	oldChannel := ""
+	if val := currentChannel.Load(); val != nil {
+		oldChannel = val.(string)
+	}
+
+	// Leave old channel if exists
+	if oldChannel != "" {
+		log.Printf("👋 Leaving channel: %s", oldChannel)
+		twitchClient.Depart(oldChannel)
+	}
+
+	// Join new channel
+	log.Printf("🎮 Joining new channel: %s", newChannel)
+	twitchClient.Join(newChannel)
+	currentChannel.Store(newChannel)
+
+	log.Printf("✅ Successfully switched to channel: %s", newChannel)
+}
+
 // HTTP handlers for Cloud Run
 func healthCheck(w http.ResponseWriter, r *http.Request) {
+	channel := ""
+	if val := currentChannel.Load(); val != nil {
+		channel = val.(string)
+	}
+
 	status := map[string]interface{}{
 		"status":            "healthy",
 		"twitch_connected":  twitchConnected.Load(),
 		"firestore_healthy": firestoreHealthy.Load(),
 		"messages_ingested": atomic.LoadInt64(&messageCount),
 		"uptime_seconds":    int(time.Since(startTime).Seconds()),
+		"current_channel":   channel,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -113,40 +187,58 @@ func main() {
 
 	// Create Twitch client (anonymous connection for read-only chat)
 	// For reading public chat, we don't need authentication
-	client := twitch.NewAnonymousClient()
+	twitchClient = twitch.NewAnonymousClient()
 
 	// Message handler
-	client.OnPrivateMessage(func(message twitch.PrivateMessage) {
+	twitchClient.OnPrivateMessage(func(message twitch.PrivateMessage) {
 		handleMessage(message)
 	})
 
 	// Connect handler
-	client.OnConnect(func() {
+	twitchClient.OnConnect(func() {
 		fmt.Println("✅ Connected to Twitch IRC")
 		fmt.Println("📡 Listening for messages...")
 		twitchConnected.Store(true)
 	})
 
 	// Reconnection handler
-	client.OnReconnectMessage(func(message twitch.ReconnectMessage) {
+	twitchClient.OnReconnectMessage(func(message twitch.ReconnectMessage) {
 		fmt.Println("⚠️  Reconnecting to Twitch...")
 		twitchConnected.Store(false)
 	})
 
-	// Join a channel (configurable via environment variable)
-	channel := os.Getenv("TWITCH_CHANNEL")
-	if channel == "" {
-		channel = "xqc" // default fallback
+	// Get initial channel from Firestore config, fallback to environment variable
+	channel := ""
+	configDoc, err := firestoreClient.Collection("config").Doc("twitch_channel").Get(ctx)
+	if err == nil && configDoc.Exists() {
+		if ch, ok := configDoc.Data()["channel"].(string); ok && ch != "" {
+			channel = ch
+			fmt.Printf("📋 Loaded channel from Firestore config: %s\n", channel)
+		}
 	}
-	client.Join(channel)
+
+	// Fallback to environment variable if not in Firestore
+	if channel == "" {
+		channel = os.Getenv("TWITCH_CHANNEL")
+		if channel == "" {
+			channel = "xqc" // default fallback
+		}
+		fmt.Printf("📋 Using channel from environment: %s\n", channel)
+	}
+
+	twitchClient.Join(channel)
+	currentChannel.Store(channel)
 	fmt.Printf("🎮 Joined channel: %s\n", channel)
+
+	// Start Firestore listener for channel changes
+	go listenForChannelChanges(ctx)
 
 	// Start stats reporting
 	go printStats()
 
 	// Start the Twitch client in a goroutine
 	go func() {
-		err := client.Connect()
+		err := twitchClient.Connect()
 		if err != nil {
 			log.Printf("Error connecting to Twitch: %v", err)
 			twitchConnected.Store(false)
@@ -193,7 +285,9 @@ func main() {
 	server.Shutdown(shutdownCtx)
 
 	// Disconnect Twitch client
-	client.Disconnect()
+	if twitchClient != nil {
+		twitchClient.Disconnect()
+	}
 }
 
 func handleMessage(message twitch.PrivateMessage) {

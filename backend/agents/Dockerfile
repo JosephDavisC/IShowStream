@@ -23,7 +23,11 @@ RUN mkdir -p logs
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
+ENV PORT=8080
 
-# Run the orchestrator
-CMD ["python", "orchestrator.py"]
+# Expose port for health checks
+EXPOSE 8080
+
+# Run the HTTP server wrapper (which runs orchestrator in background)
+CMD ["python", "server.py"]
 
